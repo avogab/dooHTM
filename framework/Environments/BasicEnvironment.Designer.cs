@@ -14,24 +14,24 @@ namespace Doo.Environments
             this.sourceTypeLabel = new System.Windows.Forms.Label();
             this.sourceTypeComboBox = new System.Windows.Forms.ComboBox();
             this.browseButton = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.fileNameTextBox = new System.Windows.Forms.TextBox();
             this.fileNameLabel = new System.Windows.Forms.Label();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.loopVideoFileCheckBox = new System.Windows.Forms.CheckBox();
-            this.genTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.genTypeLabel = new System.Windows.Forms.Label();
+            this.genSizeComboBox = new System.Windows.Forms.ComboBox();
+            this.genSizeLabel = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
-            this.fileSourceTab = new System.Windows.Forms.TabPage();
             this.generatedSourceTab = new System.Windows.Forms.TabPage();
             this.movementComboBox = new System.Windows.Forms.ComboBox();
             this.movementLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.figureComboBox = new System.Windows.Forms.ComboBox();
             this.noiseCheckBox = new System.Windows.Forms.CheckBox();
+            this.fileSourceTab = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.frameBox)).BeginInit();
             this.tabControl.SuspendLayout();
-            this.fileSourceTab.SuspendLayout();
             this.generatedSourceTab.SuspendLayout();
+            this.fileSourceTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // frameBox
@@ -50,9 +50,9 @@ namespace Doo.Environments
             this.showFrameCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showFrameCheckBox.Location = new System.Drawing.Point(382, 37);
             this.showFrameCheckBox.Name = "showFrameCheckBox";
-            this.showFrameCheckBox.Size = new System.Drawing.Size(53, 17);
+            this.showFrameCheckBox.Size = new System.Drawing.Size(51, 17);
             this.showFrameCheckBox.TabIndex = 2;
-            this.showFrameCheckBox.Text = "Show";
+            this.showFrameCheckBox.Text = "show";
             this.showFrameCheckBox.UseVisualStyleBackColor = true;
             this.showFrameCheckBox.CheckedChanged += new System.EventHandler(this.showCaptureCheckBox_CheckedChanged);
             // 
@@ -77,32 +77,32 @@ namespace Doo.Environments
             // 
             // browseButton
             // 
-            this.browseButton.Enabled = false;
             this.browseButton.Location = new System.Drawing.Point(235, 14);
             this.browseButton.Name = "browseButton";
             this.browseButton.Size = new System.Drawing.Size(28, 23);
             this.browseButton.TabIndex = 6;
             this.browseButton.Text = "...";
             this.browseButton.UseVisualStyleBackColor = true;
+            this.browseButton.Visible = false;
             this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
             // 
-            // textBox1
+            // fileNameTextBox
             // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(76, 14);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(143, 20);
-            this.textBox1.TabIndex = 7;
+            this.fileNameTextBox.Location = new System.Drawing.Point(76, 14);
+            this.fileNameTextBox.Name = "fileNameTextBox";
+            this.fileNameTextBox.Size = new System.Drawing.Size(143, 20);
+            this.fileNameTextBox.TabIndex = 7;
+            this.fileNameTextBox.Visible = false;
             // 
             // fileNameLabel
             // 
             this.fileNameLabel.AutoSize = true;
-            this.fileNameLabel.Enabled = false;
             this.fileNameLabel.Location = new System.Drawing.Point(6, 17);
             this.fileNameLabel.Name = "fileNameLabel";
             this.fileNameLabel.Size = new System.Drawing.Size(52, 13);
             this.fileNameLabel.TabIndex = 8;
             this.fileNameLabel.Text = "File name";
+            this.fileNameLabel.Visible = false;
             // 
             // openFileDialog
             // 
@@ -111,31 +111,32 @@ namespace Doo.Environments
             // loopVideoFileCheckBox
             // 
             this.loopVideoFileCheckBox.AutoSize = true;
-            this.loopVideoFileCheckBox.Enabled = false;
             this.loopVideoFileCheckBox.Location = new System.Drawing.Point(10, 52);
             this.loopVideoFileCheckBox.Name = "loopVideoFileCheckBox";
             this.loopVideoFileCheckBox.Size = new System.Drawing.Size(50, 17);
             this.loopVideoFileCheckBox.TabIndex = 9;
             this.loopVideoFileCheckBox.Text = "Loop";
             this.loopVideoFileCheckBox.UseVisualStyleBackColor = true;
+            this.loopVideoFileCheckBox.Visible = false;
+            this.loopVideoFileCheckBox.CheckedChanged += new System.EventHandler(this.loopVideoFileCheckBox_CheckedChanged);
             // 
-            // genTypeComboBox
+            // genSizeComboBox
             // 
-            this.genTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.genTypeComboBox.FormattingEnabled = true;
-            this.genTypeComboBox.Location = new System.Drawing.Point(89, 12);
-            this.genTypeComboBox.Name = "genTypeComboBox";
-            this.genTypeComboBox.Size = new System.Drawing.Size(109, 21);
-            this.genTypeComboBox.TabIndex = 10;
+            this.genSizeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.genSizeComboBox.FormattingEnabled = true;
+            this.genSizeComboBox.Location = new System.Drawing.Point(88, 46);
+            this.genSizeComboBox.Name = "genSizeComboBox";
+            this.genSizeComboBox.Size = new System.Drawing.Size(109, 21);
+            this.genSizeComboBox.TabIndex = 10;
             // 
-            // genTypeLabel
+            // genSizeLabel
             // 
-            this.genTypeLabel.AutoSize = true;
-            this.genTypeLabel.Location = new System.Drawing.Point(17, 15);
-            this.genTypeLabel.Name = "genTypeLabel";
-            this.genTypeLabel.Size = new System.Drawing.Size(31, 13);
-            this.genTypeLabel.TabIndex = 11;
-            this.genTypeLabel.Text = "Type";
+            this.genSizeLabel.AutoSize = true;
+            this.genSizeLabel.Location = new System.Drawing.Point(16, 49);
+            this.genSizeLabel.Name = "genSizeLabel";
+            this.genSizeLabel.Size = new System.Drawing.Size(27, 13);
+            this.genSizeLabel.TabIndex = 11;
+            this.genSizeLabel.Text = "Size";
             // 
             // tabControl
             // 
@@ -147,20 +148,6 @@ namespace Doo.Environments
             this.tabControl.Size = new System.Drawing.Size(375, 223);
             this.tabControl.TabIndex = 12;
             // 
-            // fileSourceTab
-            // 
-            this.fileSourceTab.Controls.Add(this.loopVideoFileCheckBox);
-            this.fileSourceTab.Controls.Add(this.fileNameLabel);
-            this.fileSourceTab.Controls.Add(this.textBox1);
-            this.fileSourceTab.Controls.Add(this.browseButton);
-            this.fileSourceTab.Location = new System.Drawing.Point(4, 22);
-            this.fileSourceTab.Name = "fileSourceTab";
-            this.fileSourceTab.Padding = new System.Windows.Forms.Padding(3);
-            this.fileSourceTab.Size = new System.Drawing.Size(367, 197);
-            this.fileSourceTab.TabIndex = 0;
-            this.fileSourceTab.Text = "File";
-            this.fileSourceTab.UseVisualStyleBackColor = true;
-            // 
             // generatedSourceTab
             // 
             this.generatedSourceTab.Controls.Add(this.movementComboBox);
@@ -168,21 +155,21 @@ namespace Doo.Environments
             this.generatedSourceTab.Controls.Add(this.label1);
             this.generatedSourceTab.Controls.Add(this.figureComboBox);
             this.generatedSourceTab.Controls.Add(this.noiseCheckBox);
-            this.generatedSourceTab.Controls.Add(this.genTypeComboBox);
-            this.generatedSourceTab.Controls.Add(this.genTypeLabel);
+            this.generatedSourceTab.Controls.Add(this.genSizeComboBox);
+            this.generatedSourceTab.Controls.Add(this.genSizeLabel);
             this.generatedSourceTab.Location = new System.Drawing.Point(4, 22);
             this.generatedSourceTab.Name = "generatedSourceTab";
             this.generatedSourceTab.Padding = new System.Windows.Forms.Padding(3);
             this.generatedSourceTab.Size = new System.Drawing.Size(367, 197);
             this.generatedSourceTab.TabIndex = 1;
-            this.generatedSourceTab.Text = "Gnerated";
+            this.generatedSourceTab.Text = "gnerated";
             this.generatedSourceTab.UseVisualStyleBackColor = true;
             // 
             // movementComboBox
             // 
             this.movementComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.movementComboBox.FormattingEnabled = true;
-            this.movementComboBox.Location = new System.Drawing.Point(89, 44);
+            this.movementComboBox.Location = new System.Drawing.Point(88, 73);
             this.movementComboBox.Name = "movementComboBox";
             this.movementComboBox.Size = new System.Drawing.Size(109, 21);
             this.movementComboBox.TabIndex = 16;
@@ -191,7 +178,7 @@ namespace Doo.Environments
             // movementLabel
             // 
             this.movementLabel.AutoSize = true;
-            this.movementLabel.Location = new System.Drawing.Point(17, 47);
+            this.movementLabel.Location = new System.Drawing.Point(16, 76);
             this.movementLabel.Name = "movementLabel";
             this.movementLabel.Size = new System.Drawing.Size(57, 13);
             this.movementLabel.TabIndex = 15;
@@ -200,7 +187,7 @@ namespace Doo.Environments
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 83);
+            this.label1.Location = new System.Drawing.Point(16, 27);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(36, 13);
             this.label1.TabIndex = 14;
@@ -210,7 +197,7 @@ namespace Doo.Environments
             // 
             this.figureComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.figureComboBox.FormattingEnabled = true;
-            this.figureComboBox.Location = new System.Drawing.Point(89, 75);
+            this.figureComboBox.Location = new System.Drawing.Point(88, 19);
             this.figureComboBox.Name = "figureComboBox";
             this.figureComboBox.Size = new System.Drawing.Size(109, 21);
             this.figureComboBox.TabIndex = 13;
@@ -226,6 +213,20 @@ namespace Doo.Environments
             this.noiseCheckBox.Text = "noise";
             this.noiseCheckBox.UseVisualStyleBackColor = true;
             // 
+            // fileSourceTab
+            // 
+            this.fileSourceTab.Controls.Add(this.loopVideoFileCheckBox);
+            this.fileSourceTab.Controls.Add(this.fileNameLabel);
+            this.fileSourceTab.Controls.Add(this.fileNameTextBox);
+            this.fileSourceTab.Controls.Add(this.browseButton);
+            this.fileSourceTab.Location = new System.Drawing.Point(4, 22);
+            this.fileSourceTab.Name = "fileSourceTab";
+            this.fileSourceTab.Padding = new System.Windows.Forms.Padding(3);
+            this.fileSourceTab.Size = new System.Drawing.Size(367, 197);
+            this.fileSourceTab.TabIndex = 0;
+            this.fileSourceTab.Text = "video file";
+            this.fileSourceTab.UseVisualStyleBackColor = true;
+            // 
             // BasicEnvironment
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -238,13 +239,14 @@ namespace Doo.Environments
             this.Controls.Add(this.frameBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "BasicEnvironment";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Environment";
             ((System.ComponentModel.ISupportInitialize)(this.frameBox)).EndInit();
             this.tabControl.ResumeLayout(false);
-            this.fileSourceTab.ResumeLayout(false);
-            this.fileSourceTab.PerformLayout();
             this.generatedSourceTab.ResumeLayout(false);
             this.generatedSourceTab.PerformLayout();
+            this.fileSourceTab.ResumeLayout(false);
+            this.fileSourceTab.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -256,23 +258,24 @@ namespace Doo.Environments
         private System.Windows.Forms.Label sourceTypeLabel;
         private System.Windows.Forms.ComboBox sourceTypeComboBox;
         private System.Windows.Forms.Button browseButton;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox fileNameTextBox;
         private System.Windows.Forms.Label fileNameLabel;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.CheckBox loopVideoFileCheckBox;
-        private System.Windows.Forms.ComboBox genTypeComboBox;
-        private System.Windows.Forms.Label genTypeLabel;
+        private System.Windows.Forms.ComboBox genSizeComboBox;
+        private System.Windows.Forms.Label genSizeLabel;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage fileSourceTab;
         private System.Windows.Forms.TabPage generatedSourceTab;
         private System.Windows.Forms.CheckBox noiseCheckBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox figureComboBox;
-
-
-        #endregion
         private System.Windows.Forms.ComboBox movementComboBox;
         private System.Windows.Forms.Label movementLabel;
+
+        #endregion
+
+
     }
 }
 

@@ -8,7 +8,6 @@ namespace Doo
         Missing = 0,
         WebCam,
         VideoFile,
-        Generated,
-        StillImage
+        Generated
     }
 }

@@ -1,11 +1,14 @@
 ﻿using System;
+using Emgu.CV;
+using Emgu.CV.Structure;
 
 namespace Doo.Environments
 {
     enum GeneratedFigure
     {
         Missing = 0,
-        Line,
+        VerticalBar,
+        ObliqueLine,
         Square,
         Circle
     }
@@ -15,6 +18,7 @@ namespace Doo.Environments
         Missing = 0,
         Fixed,
         LeftToRight,
-        Circular
+        CircularClockwise,
+        CircularAnticlockwise
     }
 }

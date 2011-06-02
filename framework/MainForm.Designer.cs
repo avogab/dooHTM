@@ -10,79 +10,53 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.initNetButton = new System.Windows.Forms.Button();
-            this.startNetButton = new System.Windows.Forms.Button();
+            this.components = new System.ComponentModel.Container();
             this.stopNetButton = new System.Windows.Forms.Button();
             this.stepNetButton = new System.Windows.Forms.Button();
-            this.environmentsComboBox = new System.Windows.Forms.ComboBox();
             this.logListView = new System.Windows.Forms.ListView();
             this.id = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.time = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.description = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.environmentsLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.cycleTextBox = new System.Windows.Forms.TextBox();
             this.sleepLabel = new System.Windows.Forms.Label();
             this.sleepBetweenStepTextBox = new System.Windows.Forms.TextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.startNetButton = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.panel1.SuspendLayout();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.runMacro1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.macro1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.macro2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // initNetButton
-            // 
-            this.initNetButton.Location = new System.Drawing.Point(268, 12);
-            this.initNetButton.Name = "initNetButton";
-            this.initNetButton.Size = new System.Drawing.Size(121, 30);
-            this.initNetButton.TabIndex = 1;
-            this.initNetButton.Text = "Create and Initialize";
-            this.initNetButton.UseVisualStyleBackColor = true;
-            this.initNetButton.Click += new System.EventHandler(this.initNetButton_Click);
-            // 
-            // startNetButton
-            // 
-            this.startNetButton.Enabled = false;
-            this.startNetButton.Location = new System.Drawing.Point(16, 15);
-            this.startNetButton.Name = "startNetButton";
-            this.startNetButton.Size = new System.Drawing.Size(69, 27);
-            this.startNetButton.TabIndex = 2;
-            this.startNetButton.Text = "Start";
-            this.startNetButton.UseVisualStyleBackColor = true;
-            this.startNetButton.Click += new System.EventHandler(this.startNetButton_Click);
             // 
             // stopNetButton
             // 
             this.stopNetButton.Enabled = false;
-            this.stopNetButton.Location = new System.Drawing.Point(166, 15);
+            this.stopNetButton.Image = global::Doo.Properties.Resources.stopImage;
+            this.stopNetButton.Location = new System.Drawing.Point(128, 12);
             this.stopNetButton.Name = "stopNetButton";
-            this.stopNetButton.Size = new System.Drawing.Size(69, 27);
+            this.stopNetButton.Size = new System.Drawing.Size(32, 32);
             this.stopNetButton.TabIndex = 3;
-            this.stopNetButton.Text = "Stop";
+            this.toolTip1.SetToolTip(this.stopNetButton, "Stop");
             this.stopNetButton.UseVisualStyleBackColor = true;
             this.stopNetButton.Click += new System.EventHandler(this.stopNetButton_Click);
             // 
             // stepNetButton
             // 
             this.stepNetButton.Enabled = false;
-            this.stepNetButton.Location = new System.Drawing.Point(91, 15);
+            this.stepNetButton.Image = global::Doo.Properties.Resources.stepImage;
+            this.stepNetButton.Location = new System.Drawing.Point(18, 12);
             this.stepNetButton.Name = "stepNetButton";
-            this.stepNetButton.Size = new System.Drawing.Size(69, 27);
+            this.stepNetButton.Size = new System.Drawing.Size(35, 32);
             this.stepNetButton.TabIndex = 5;
-            this.stepNetButton.Text = "Step";
+            this.toolTip1.SetToolTip(this.stepNetButton, "Step");
             this.stepNetButton.UseVisualStyleBackColor = true;
             this.stepNetButton.Click += new System.EventHandler(this.stepNetButton_Click);
-            // 
-            // environmentsComboBox
-            // 
-            this.environmentsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.environmentsComboBox.FormattingEnabled = true;
-            this.environmentsComboBox.Location = new System.Drawing.Point(91, 16);
-            this.environmentsComboBox.Name = "environmentsComboBox";
-            this.environmentsComboBox.Size = new System.Drawing.Size(148, 21);
-            this.environmentsComboBox.TabIndex = 6;
             // 
             // logListView
             // 
@@ -96,7 +70,7 @@
             this.logListView.FullRowSelect = true;
             this.logListView.Location = new System.Drawing.Point(8, 39);
             this.logListView.Name = "logListView";
-            this.logListView.Size = new System.Drawing.Size(468, 91);
+            this.logListView.Size = new System.Drawing.Size(414, 77);
             this.logListView.TabIndex = 13;
             this.logListView.UseCompatibleStateImageBehavior = false;
             this.logListView.View = System.Windows.Forms.View.Details;
@@ -115,14 +89,6 @@
             // 
             this.description.Text = "Description";
             this.description.Width = 280;
-            // 
-            // environmentsLabel
-            // 
-            this.environmentsLabel.Location = new System.Drawing.Point(13, 19);
-            this.environmentsLabel.Name = "environmentsLabel";
-            this.environmentsLabel.Size = new System.Drawing.Size(72, 23);
-            this.environmentsLabel.TabIndex = 0;
-            this.environmentsLabel.Text = "Environment";
             // 
             // label1
             // 
@@ -145,33 +111,20 @@
             // sleepLabel
             // 
             this.sleepLabel.AutoSize = true;
-            this.sleepLabel.Location = new System.Drawing.Point(254, 22);
+            this.sleepLabel.Location = new System.Drawing.Point(231, 22);
             this.sleepLabel.Name = "sleepLabel";
-            this.sleepLabel.Size = new System.Drawing.Size(123, 13);
+            this.sleepLabel.Size = new System.Drawing.Size(128, 13);
             this.sleepLabel.TabIndex = 17;
-            this.sleepLabel.Text = "Sleep between step (ms)";
+            this.sleepLabel.Text = "Sleep between steps (ms)";
             // 
             // sleepBetweenStepTextBox
             // 
-            this.sleepBetweenStepTextBox.Location = new System.Drawing.Point(399, 19);
+            this.sleepBetweenStepTextBox.Location = new System.Drawing.Point(365, 19);
             this.sleepBetweenStepTextBox.Name = "sleepBetweenStepTextBox";
             this.sleepBetweenStepTextBox.Size = new System.Drawing.Size(48, 20);
             this.sleepBetweenStepTextBox.TabIndex = 18;
             this.sleepBetweenStepTextBox.Text = "0";
             this.sleepBetweenStepTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.environmentsLabel);
-            this.panel1.Controls.Add(this.initNetButton);
-            this.panel1.Controls.Add(this.environmentsComboBox);
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(485, 55);
-            this.panel1.TabIndex = 19;
             // 
             // panel2
             // 
@@ -183,10 +136,22 @@
             this.panel2.Controls.Add(this.sleepBetweenStepTextBox);
             this.panel2.Controls.Add(this.sleepLabel);
             this.panel2.Controls.Add(this.stepNetButton);
-            this.panel2.Location = new System.Drawing.Point(3, 64);
+            this.panel2.Location = new System.Drawing.Point(3, 27);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(485, 54);
+            this.panel2.Size = new System.Drawing.Size(436, 54);
             this.panel2.TabIndex = 20;
+            // 
+            // startNetButton
+            // 
+            this.startNetButton.Enabled = false;
+            this.startNetButton.Image = global::Doo.Properties.Resources.startImage;
+            this.startNetButton.Location = new System.Drawing.Point(74, 12);
+            this.startNetButton.Name = "startNetButton";
+            this.startNetButton.Size = new System.Drawing.Size(32, 32);
+            this.startNetButton.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.startNetButton, "Loop");
+            this.startNetButton.UseVisualStyleBackColor = true;
+            this.startNetButton.Click += new System.EventHandler(this.startNetButton_Click);
             // 
             // panel3
             // 
@@ -197,52 +162,91 @@
             this.panel3.Controls.Add(this.cycleTextBox);
             this.panel3.Controls.Add(this.label1);
             this.panel3.Controls.Add(this.logListView);
-            this.panel3.Location = new System.Drawing.Point(3, 124);
+            this.panel3.Location = new System.Drawing.Point(3, 87);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(485, 145);
+            this.panel3.Size = new System.Drawing.Size(436, 131);
             this.panel3.TabIndex = 21;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.runMacro1});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(442, 24);
+            this.menuStrip1.TabIndex = 22;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // runMacro1
+            // 
+            this.runMacro1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.macro1ToolStripMenuItem,
+            this.macro2ToolStripMenuItem});
+            this.runMacro1.Name = "runMacro1";
+            this.runMacro1.Size = new System.Drawing.Size(67, 20);
+            this.runMacro1.Text = "run macro";
+            this.runMacro1.Visible = false;
+            // 
+            // macro1ToolStripMenuItem
+            // 
+            this.macro1ToolStripMenuItem.Name = "macro1ToolStripMenuItem";
+            this.macro1ToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.macro1ToolStripMenuItem.Text = "macro1";
+            this.macro1ToolStripMenuItem.Click += new System.EventHandler(this.macro1ToolStripMenuItem_Click);
+            // 
+            // macro2ToolStripMenuItem
+            // 
+            this.macro2ToolStripMenuItem.Name = "macro2ToolStripMenuItem";
+            this.macro2ToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.macro2ToolStripMenuItem.Text = "macro2";
+            this.macro2ToolStripMenuItem.Click += new System.EventHandler(this.macro2ToolStripMenuItem_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(492, 273);
+            this.ClientSize = new System.Drawing.Size(442, 222);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
-            this.MinimumSize = new System.Drawing.Size(500, 300);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(450, 234);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Director";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
+        #endregion
+        
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.Button initNetButton;
         private System.Windows.Forms.Button startNetButton;
         private System.Windows.Forms.Button stopNetButton;
         private System.Windows.Forms.Button stepNetButton;
-        private System.Windows.Forms.ComboBox environmentsComboBox;
         private System.Windows.Forms.ListView logListView;
         private System.Windows.Forms.ColumnHeader time;
         private System.Windows.Forms.ColumnHeader description;
-        private System.Windows.Forms.Label environmentsLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox cycleTextBox;
         private System.Windows.Forms.Label sleepLabel;
         private System.Windows.Forms.TextBox sleepBetweenStepTextBox;
         private System.Windows.Forms.ColumnHeader id;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
-
-        #endregion
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem runMacro1;
+        private System.Windows.Forms.ToolStripMenuItem macro1ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem macro2ToolStripMenuItem;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

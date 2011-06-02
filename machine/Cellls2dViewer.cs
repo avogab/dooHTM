@@ -8,7 +8,7 @@ using Doo.Machine.HTM;
 
 namespace Doo.Machine
 {
-    partial class Cellls2dViewer : UserControl
+    partial class Cellls2dViewer : Form
     {
         Cells2D<HTMCell> _inputs;
         const int cellWidth = 5;

@@ -59,5 +59,26 @@ namespace Doo.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Bitmap startImage {
+            get {
+                object obj = ResourceManager.GetObject("startImage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap stepImage {
+            get {
+                object obj = ResourceManager.GetObject("stepImage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap stopImage {
+            get {
+                object obj = ResourceManager.GetObject("stopImage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

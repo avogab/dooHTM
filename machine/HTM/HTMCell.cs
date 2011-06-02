@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Doo.Machine.HTM
 {
-    class HTMCell : ISpatialCell
+    public class HTMCell : ISpatialCell
     {
         HTMColumn _column;
         double _x;
@@ -237,15 +237,32 @@ namespace Doo.Machine.HTM
                 
                 if (segInfo.AddNewSynapses && segInfo.NewSynapses.Count > 0)
                 {
+                    // check wheter exist a similar segment
+                    bool isFound = false;
+                    foreach (HTMSegment seg in _distalSegments)
+                    {
+                        int foundCount = 0;
+                        foreach (HTMSynapse syn in seg.Synapses)
+                            if (segInfo.NewSynapses.Contains(syn.InputCell))
+                                foundCount++;
+                        if (foundCount == segInfo.NewSynapses.Count)
+                        {
+                            isFound = true;
+                            break;
+                        }
+                    }
+                    if (isFound)
+                        continue;
+
+                    // update or create a segment
                     HTMSegment segment;
-                    HTMSynapse newSynapse;
                     if (segInfo.Segment != null)
                         segment = segInfo.Segment;
                     else
                     {
-                        segment = new HTMSegment(this);
+                        segment = new HTMSegment(this);                        
                         _distalSegments.Add(segment);
-                        _column.Region.Agent.Log("Created new distal segment on a cell on column " + segment.Cell.Column.PosX.ToString() + "," + segment.Cell.Column.PosY.ToString());
+                        _column.Region.Director.Log("Created new distal segment on a cell on column " + segment.Cell.Column.PosX.ToString() + "," + segment.Cell.Column.PosY.ToString());
                     }
                     segment.IsSequence = segInfo.IsSequence;
                     foreach (HTMCell cell in segInfo.NewSynapses)

@@ -13,7 +13,7 @@ namespace Doo
 {
     public partial class MainForm : Form, IDirector
     {
-        IEnvironment _env;
+        IAgent _env;
         IAgent _agn;
         Thread _loopThread;
         bool _stopLoop;
@@ -21,10 +21,13 @@ namespace Doo
         int _logCounter;
         delegate void LogDelegate(string log);
         delegate void UpdateCycleTextBoxDelegate();
-        
+        delegate void LoopFinishedDelegate();
+
         public MainForm()
         {
             InitializeComponent();
+            _cycle = 0;
+            _logCounter = 0;
 
             // TO DO: dinamically iterate available environment classes
             //try
@@ -42,11 +45,33 @@ namespace Doo
             //catch (Exception exch)
             //{
             //}
+            //environmentsComboBox.Items.Add("BasicEnvironment");
+            //environmentsComboBox.SelectedIndex = environmentsComboBox.Items.Count - 1;
 
-            environmentsComboBox.Items.Add("BasicEnvironment");
-            environmentsComboBox.SelectedIndex = environmentsComboBox.Items.Count - 1;
-            _cycle = 0;
-            _logCounter = 0;
+            //CreateMainNet();
+
+            BaseScript();
+        }
+
+        void CreateMainNet()
+        {
+            _env = new BasicEnvironment(this);
+            _agn = new HTMBuilder(this);
+            _agn.InputAgent = _env;   // link the agent to the environment
+            
+            // Set visual properties
+            Form _envForm = (Form)_env;
+            Form _agnForm = (Form)_agn;
+            _envForm.Location = new Point(500, 0);
+            _envForm.Show();
+            _env.Initialize(); // TO DO manage better the initialization process.
+            _agnForm.Location = new Point(0, 250);
+            _agnForm.Show();
+
+            this.Log("Main classes created.");
+            startNetButton.Enabled = true;
+            stepNetButton.Enabled = true;
+            stopNetButton.Enabled = false;
         }
         
         protected override void Dispose(bool disposing)
@@ -59,35 +84,35 @@ namespace Doo
             base.Dispose(disposing);
         }
 
-        void initNetButton_Click(object sender, EventArgs e)
-        {
-            switch (environmentsComboBox.Text)
-            {
-                case "BasicEnvironment":
-                    _env = new BasicEnvironment();
-                    break;
-            }
-            // TO DO: dinamically create environment class
+        // TO DO: dinamically create agent and environment class
+        //void initNetButton_Click(object sender, EventArgs e)
+        //{
+            //switch (environmentsComboBox.Text)
+            //{
+            //    case "BasicEnvironment":
+            //        _env = new BasicEnvironment();
+            //        break;
+            //}
             //t = Type.GetType("Doo.Environments.EnvironmentL010");
             //IEnvironment env = (IEnvironment)Activator.CreateInstance(t, new object[] { 5, 5 });
 
-            _agn = new Doo.Machine.AgentControl(this);
-            _env.SetAgent(_agn);
+            //_agn = new Doo.Machine.AgentControl(this);
+            //_env.SetAgent(_agn);
 
-            _agn.Show();
-            _env.Show();
+            //_agn.Show();
+            //_env.Show();
 
             //
             //_env.Initialize(); // TO DO: the initialization must be better managed. it could conflict with change in environment mode combobox.
-            _agn.Initialize();
-            Log("Inizialization OK");
+        //    _agn.Initialize();
+        //    Log("Inizialization OK");
 
-            //
-            initNetButton.Enabled = false;
-            startNetButton.Enabled = true;
-            stepNetButton.Enabled = true;
-            stopNetButton.Enabled = false;
-        }
+        //    //
+        //    initNetButton.Enabled = false;
+        //    startNetButton.Enabled = true;
+        //    stepNetButton.Enabled = true;
+        //    stopNetButton.Enabled = false;
+        //}
 
         void stepNetButton_Click(object sender, EventArgs e)
         {
@@ -107,18 +132,19 @@ namespace Doo
         private void stopNetButton_Click(object sender, EventArgs e)
         {
             _stopLoop = true;
-            startNetButton.Enabled = true;
-            stepNetButton.Enabled = true;
-            stopNetButton.Enabled = false;
         }
 
-        void Step()
+        bool Step()
         {
-            _env.Step();
-            _agn.Step();
             _cycle++;
+            if (!_env.Step())
+                return false;
+            if (!_agn.Step())
+                return false;
+
             if ((_cycle & 3) == 3) // update cycle text box every 4 cycle
                 UpdateCycleTextBox();
+            return true;
         }
 
         void UpdateCycleTextBox()
@@ -127,7 +153,6 @@ namespace Doo
             {
                 Invoke(new UpdateCycleTextBoxDelegate(UpdateCycleTextBox));
             }
-
             cycleTextBox.Text = _cycle.ToString();
         }
 
@@ -138,8 +163,24 @@ namespace Doo
             {
                 Thread.Sleep(int.Parse(sleepBetweenStepTextBox.Text));
                 Application.DoEvents();
-                Step();
+                if (!Step())
+                    _stopLoop = true;
             }
+            LoopFinished();
+        }
+
+        void LoopFinished()
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new LoopFinishedDelegate(LoopFinished));
+                return;
+            }
+
+            Log("Loop interrupted.");
+            startNetButton.Enabled = true;
+            stepNetButton.Enabled = true;
+            stopNetButton.Enabled = false;
         }
 
         void logListView_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -161,11 +202,44 @@ namespace Doo
             _logCounter++;
             ListViewItem item = new ListViewItem(new string[] { _logCounter.ToString(), DateTime.Now.ToString("hh:mm:ss"), log });
             logListView.Items.Add(item);
+            logListView.Items[logListView.Items.Count - 1].EnsureVisible();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _stopLoop = true;
+        }
+
+        private void macro1ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BaseScript();
+        }
+
+        private void macro2ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Macro macro = new Macro(this);
+            //macro.MNistMacro();
+        }
+
+        private void BaseScript()
+        {
+            _env = new BasicEnvironment(this);
+            _agn = new HTMBuilder(this);
+            _agn.InputAgent = _env;   // link the agent to the environment
+
+            // Set visual properties
+            Form _envForm = (Form)_env;
+            Form _agnForm = (Form)_agn;
+            _envForm.Location = new Point(500, 0);
+            _envForm.Show();
+            _env.Initialize(); // TO DO manage better the initialization process.
+            _agnForm.Location = new Point(0, 250);
+            _agnForm.Show();
+
+            this.Log("Main classes created.");
+            startNetButton.Enabled = true;
+            stepNetButton.Enabled = true;
+            stopNetButton.Enabled = false;
         }
     }
 }

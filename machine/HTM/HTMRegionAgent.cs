@@ -5,10 +5,12 @@ using Doo;
 namespace Doo.Machine.HTM
 {
     // The main unit of memory and prediction in an HTM.
-    class HTMRegion
+    public class HTMRegionAgent : IAgent
     {
-        AgentControl _agent;
-        Cells2D<HTMCell> _inputCells;
+        IDirector _director;
+        IAgent _inputAgent;
+        int _inputWidth;
+        int _inputHeight;
         int _width;
         int _height;
         int _cellsPerColumn;
@@ -21,12 +23,16 @@ namespace Doo.Machine.HTM
         RandomEx _random;
         List<HTMColumn> _activeColumns;  // The list of active columns after the spatial pooling phases.
         int _correctPrediction;
-        
-        public AgentControl Agent { get { return _agent; } }
+        Cells2D<HTMCell> _inputCells;
+        Cells2D<HTMCell> _outputCells;
+        int _distalSegmentSpan;
+
+        public IDirector Director { get { return _director; } set { _director = value; } }
+        public IAgent InputAgent { get { return _inputAgent; } set { _inputAgent = value; } }
         public int Width { get { return _width; } }
         public int Height { get { return _height; } }
         public int CellsPerColumn { get { return _cellsPerColumn; } }
-        public HTMColumn[,] Columns { get { return _columns; } }
+        internal HTMColumn[,] Columns { get { return _columns; } }
         public double MinOverlap { get { return _minOverlap; } }
         public int DesiredLocalActivity { get { return _desiredLocalActivity; } }
         public double InhibitionRadius { get { return _inhibitionRadius; } }
@@ -40,20 +46,23 @@ namespace Doo.Machine.HTM
         // param cellsPerColumn: Number of (temporal context) cells to use for each column.
         // param minOverlap: the minimum number of inputs that must be active for a column to be considered during the inhibition step.
         // param desiredLocalActivity number of columns that will be winners after the inhibition step.
-        public HTMRegion(AgentControl agent, Cells2D<HTMCell> inputCells, int regionWidth, int regionHeight, int cellsPerColumn = 1,
-            int minOverlap = 2, int desiredLocalActivity = 4)
+        public HTMRegionAgent(IDirector director, int inputWidth, int inputHeight, int regionWidth, int regionHeight, int cellsPerColumn,
+            int minOverlap, int desiredLocalActivity, int distalSegmentSpan)
         {
-            _agent = agent;
-            _inputCells = inputCells;
+            _director = director;
+            _inputWidth = inputWidth;
+            _inputHeight = inputHeight;
             _width = regionWidth;
             _height = regionHeight;
             _cellsPerColumn = cellsPerColumn;
             _minOverlap = minOverlap;
             _desiredLocalActivity = desiredLocalActivity;
+            _distalSegmentSpan = distalSegmentSpan;
             _doSpatialLearning = true;
             _doTemporalLearning = true;
             
             _random = new RandomEx(0);
+            _inputCells = new Cells2D<HTMCell>(inputWidth, inputHeight);
             _activeColumns = new List<HTMColumn>(_width * _height);
 
             // Create the columns
@@ -62,34 +71,55 @@ namespace Doo.Machine.HTM
                 for (int cy = 0; cy < _height; cy++)
                     _columns[cx, cy] = new HTMColumn(this, cx, cy, (cx + 0.5)/_width, (cy + 0.5)/_height);
 
-            // ... and connect all potentialSynapses.
-            double permanence;
-            HTMSynapse synapse;
-            foreach (HTMColumn col in _columns)
-            {
-                // TO DO : get a random sample from the input matrix
-                List<HTMCell> cells = _inputCells.GetRectangle(col.X, col.Y, 4, 4);
-                foreach (HTMCell c in cells)
-                {
-                    permanence = _random.NextGauss(HTMSynapse._connectedPermanence, HTMSynapse._permanenceIncrement * 2.0, true);
-                    synapse = new HTMSynapse(c, permanence);
-                    col.ProximalSegment.Synapses.Add(synapse);
-                }
-            }
-            _inhibitionRadius = AverageReceptiveFieldSize();
+            // Create the output matrix.
+            _outputCells = new Cells2D<HTMCell>(_width, _height);
         }
 
-        public void Step()
+        public object GetOutput()
+        {
+            for (int cx = 0; cx < _width; cx++)
+                for (int cy = 0; cy < _height; cy++)
+                    _outputCells[cx, cy].SetActive(_columns[cx, cy].IsActive);
+            return _outputCells;
+        }
+
+        public HTMColumn GetMostActiveColumn()
+        {
+            HTMColumn mostActive = null;
+            double maxOverlap = double.MinValue;
+            // TO DO: at the moment gets the last (in the array) most active
+            foreach (HTMColumn col in _activeColumns)
+            {
+                if (col.Overlap > maxOverlap)
+                {
+                    maxOverlap = col.Overlap;
+                    mostActive = col;
+                }
+            }
+            return mostActive;
+        }
+
+        public bool Step()
         {
             foreach (HTMColumn col in _columns)
                 foreach (HTMCell cell in col.Cells)
                     cell.Step();
+
+            // Retrieve the region's input cell.
+            Cells2D<HTMCell> inputCells = (Cells2D<HTMCell>)_inputAgent.GetOutput();
+            
+            // TO DO: avoid the copy
+            for (int x = 0; x < _inputWidth; x++)
+                for (int y = 0; y < _inputHeight; y++)
+                    _inputCells[x, y].SetActive(inputCells[x, y].GetActive(0));
+
             StepSpatialPooling();
-            StepTemporalPooling();
+            StepTemporalPooling();            
+            return true;
         }
 
         // Return all the columns within inhibitionRadius of the input column.
-        public List<HTMColumn> Neighbors(HTMColumn column)
+        internal List<HTMColumn> Neighbors(HTMColumn column)
         {
             int irad = (int)System.Math.Round(_inhibitionRadius);
             int x0 = Math.Max(0, Math.Min(column.PosX - 1, column.PosX - irad));
@@ -106,7 +136,7 @@ namespace Doo.Machine.HTM
         }
 
         // Given the list of columns, return the k'th highest overlap value.
-        public double KthScore(List<HTMColumn> cols, int k)
+        internal double KthScore(List<HTMColumn> cols, int k)
         {
             List<double> overlaps = new List<double>();
             foreach (HTMColumn col in _columns)
@@ -273,7 +303,7 @@ namespace Doo.Machine.HTM
 
                         cell.SetPredicting(true);
                         // TO DO : check. Active and predictive state are mutual exclusive?
-                        // if so, the alteration from active to predicting must be done
+                        // if so, the changing from active to predicting must be done
                         // through a temporary array to avoid cell asymmetrical behavior.
                         //cell.SetActive(false);
 
@@ -287,7 +317,7 @@ namespace Doo.Machine.HTM
                             HTMSegment predSegment = cell.GetBestMatchingSegment(-1, true);
                             if (predSegment == null)
                                 continue;
-                            _agent.Log("New predSegment on col x:" + col.PosX.ToString() + " y:" + col.PosY.ToString());
+                            _director.Log("New predSegment on col x:" + col.PosX.ToString() + " y:" + col.PosY.ToString());
                             SegmentUpdate predSegUpdate = cell.GetSegmentActiveSynapses(-1, predSegment, true);
                             cell.SegmentUpdateList.Add(predSegUpdate);
                         }
@@ -324,6 +354,86 @@ namespace Doo.Machine.HTM
                     }
                 }
             }
+        }
+
+        public bool Initialize()
+        {
+            // Connect all potentialSynapses.
+            double permanence;
+            HTMSynapse synapse;
+            foreach (HTMColumn col in _columns)
+            {
+                // TO DO : get a random sample from the input matrix
+                List<HTMCell> cells = _inputCells.GetRectangle(col.X, col.Y, _distalSegmentSpan, _distalSegmentSpan);
+                foreach (HTMCell c in cells)
+                {
+                    permanence = _random.NextGauss(HTMSynapse._connectedPermanence, HTMSynapse._permanenceIncrement * 2.0, true);
+                    synapse = new HTMSynapse(c, permanence);
+                    col.ProximalSegment.Synapses.Add(synapse);
+                }
+            }
+            _inhibitionRadius = AverageReceptiveFieldSize();
+            return true;
+        }
+
+        public StatInfo GetStatInfo(HTMRegionViewerPropertyShowed property)
+        {
+            StatInfo statInfo = new StatInfo();
+
+            double max = double.MinValue;
+            double min = double.MaxValue;
+            double val;
+            switch (property)
+            {
+                case HTMRegionViewerPropertyShowed.ColumnActivation:
+                    break;
+                case HTMRegionViewerPropertyShowed.ColumnPermanence:
+                    foreach (HTMColumn col in _columns)
+                    {
+                        val = col.GetAveragePermanence();
+                        if (val > max)
+                            max = val;
+                        if (val < min)
+                            min = val;
+                    }
+                    break;
+                case HTMRegionViewerPropertyShowed.ColumnOverlap:
+                    foreach (HTMColumn col in _columns)
+                    {
+                        if (col.Overlap > max)
+                            max = col.Overlap;
+                        if (col.Overlap < min)
+                            min = col.Overlap;
+                    }
+                    break;
+                case HTMRegionViewerPropertyShowed.ColumnBoost:
+                    foreach (HTMColumn col in _columns)
+                    {
+                        if (col.Boost > max)
+                            max = col.Boost;
+                        if (col.Boost < min)
+                            min = col.Boost;
+                    }
+                    break;
+                case HTMRegionViewerPropertyShowed.DistalSegmentsCount:
+                    int count;
+                    foreach (HTMColumn col in _columns)
+                    {
+                        count = 0;
+                        foreach (HTMCell cls in col.Cells)
+                            count += cls.DistalSegments.Count;
+                        if (count > max)
+                            max = count;
+                        if (count < min)
+                            min = count;
+                    }        
+                    break;
+                default:
+                    break;
+            }
+            statInfo.Min = min;
+            statInfo.Max = max;
+            return statInfo;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Doo.Machine
     // This class is utilized to group cells arranged by a two-dimensional matrix.
     // The comunser of this class typically ignore the width and height of the underneath matrix
     // so to access each element it will use the indexer: T this[double x, double y].
-    class Cells2D<T> where T : ISpatialCell, new()
+    public class Cells2D<T> where T : ISpatialCell, new()
     {
         T[,] _cells;
         
@@ -46,6 +46,19 @@ namespace Doo.Machine
                     _cells[ix, iy].X = (double)ix / (double)(width - 1);
                     _cells[ix, iy].Y = (double)iy / (double)(height - 1);
                 }
+        }
+        
+        public Cells2D<T> Clone()
+        {
+            Cells2D<T> newCells = new Cells2D<T>();
+            newCells._cells = new T[Width, Height];
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    newCells._cells[x, y] = new T();
+                    newCells._cells[x, y].SetActive(_cells[x, y].GetActive(0));
+                }
+            return newCells;
         }
 
         public List<T> GetRectangle(double x, double y, int width, int height)

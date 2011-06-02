@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Doo.Machine.HTM
 {
-    class HTMSynapse
+    public class HTMSynapse
     {
         HTMCell _inputCell;
         double _permanence;

@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Doo.Machine</RootNamespace>
     <AssemblyName>machine</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -48,7 +49,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -56,50 +56,60 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cellls2dViewer.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Cellls2dViewer.Designer.cs">
       <DependentUpon>Cellls2dViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Cells2D.cs" />
-    <Compile Include="AgentControl.cs">
+    <Compile Include="HTMBuilder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AgentControl.Designer.cs">
-      <DependentUpon>AgentControl.cs</DependentUpon>
+    <Compile Include="HTMBuilder.Designer.cs">
+      <DependentUpon>HTMBuilder.cs</DependentUpon>
     </Compile>
     <Compile Include="FilterVertex.cs" />
     <Compile Include="HTM\HTMCell.cs" />
-    <Compile Include="HTM\HTMColumn.cs" />
-    <Compile Include="HTM\HTMRegion.cs" />
-    <Compile Include="HTM\HTMRegionViewer.cs">
+    <Compile Include="HTM\HTMCellsViewer.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="HTM\HTMCellsViewer.Designer.cs">
+      <DependentUpon>HTMCellsViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HTM\HTMColumn.cs" />
+    <Compile Include="HTM\HTMRegionAgent.cs" />
+    <Compile Include="HTM\HTMRegionViewer.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="HTM\HTMRegionViewer.Designer.cs">
       <DependentUpon>HTMRegionViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="HTM\HTMRegionViewerControl.cs">
+    <Compile Include="HTM\HTMColumnsViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="HTM\HTMRegionViewerControl.Designer.cs">
-      <DependentUpon>HTMRegionViewerControl.cs</DependentUpon>
+    <Compile Include="HTM\HTMColumnsViewer.Designer.cs">
+      <DependentUpon>HTMColumnsViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="HTM\HTMSegment.cs" />
     <Compile Include="HTM\HTMSynapse.cs" />
     <Compile Include="HTM\HTMTypes.cs" />
+    <Compile Include="PreprocessAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types.cs" />
-    <EmbeddedResource Include="AgentControl.resx">
-      <DependentUpon>AgentControl.cs</DependentUpon>
+    <EmbeddedResource Include="HTMBuilder.resx">
+      <DependentUpon>HTMBuilder.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Cellls2dViewer.resx">
       <DependentUpon>Cellls2dViewer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="HTM\HTMCellsViewer.resx">
+      <DependentUpon>HTMCellsViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="HTM\HTMRegionViewer.resx">
       <DependentUpon>HTMRegionViewer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="HTM\HTMRegionViewerControl.resx">
-      <DependentUpon>HTMRegionViewerControl.cs</DependentUpon>
+    <EmbeddedResource Include="HTM\HTMColumnsViewer.resx">
+      <DependentUpon>HTMColumnsViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

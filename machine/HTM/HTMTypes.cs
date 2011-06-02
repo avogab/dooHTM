@@ -14,7 +14,7 @@ namespace Doo.Machine.HTM
     // are available to connect (add synapses to) should the segment get updated.
     // If there is a locality radius set on the Region, the pool of learning cells
     // is restricted to those with the radius.
-    class SegmentUpdate
+    public class SegmentUpdate
     {
         HTMSegment _segment;
         bool _addNewSynapses;
@@ -29,12 +29,22 @@ namespace Doo.Machine.HTM
         public List<HTMCell> NewSynapses { get { return _newSynapses; } set { _newSynapses = value; } }
     }
 
-    struct CellSegmentInfo
+    public struct CellSegmentInfo
     {
         HTMCell _cell;
         HTMSegment _segment;
 
         public HTMCell Cell { get { return _cell; } set { _cell = value; } }
         public HTMSegment Segment { get { return _segment; } set { _segment = value; } }
+    }
+
+    public enum HTMRegionViewerPropertyShowed
+    {
+        Missing = 0,
+        ColumnActivation,
+        ColumnPermanence,
+        ColumnOverlap,
+        ColumnBoost,
+        DistalSegmentsCount
     }
 }

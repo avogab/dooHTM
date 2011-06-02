@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Doo.Machine.HTM
 {
-    class HTMSegment
+    public class HTMSegment
     {
         HTMCell _cell;  // the cell that own the segment.
         bool _isSequence; // flag indicating whether the segment predicts feed-forward input the next time step.

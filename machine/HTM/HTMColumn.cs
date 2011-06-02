@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace Doo.Machine.HTM
 {
     // Represents a single column of cells within an HTM Region.
-    class HTMColumn
+    public class HTMColumn
     {
-        HTMRegion _region;
+        HTMRegionAgent _region;
         int _posX;  // The x-position of the column inside the matrix
         int _posY;  // The y-position of the column inside the matrix
         double _x;  // The x spatial position of the column. Range from 0 to 1.
@@ -22,7 +22,7 @@ namespace Doo.Machine.HTM
         const double permanenceDec = 0.1;  // Amount permanence values of synapses are decremented during learning.
         const double connectedPerm = 0.4;  // If the permanence value for a synapse is greater than this value, it is said to be connected.
         
-        public HTMRegion Region { get { return _region; } }
+        public HTMRegionAgent Region { get { return _region; } }
         public int PosX { get { return _posX; } }
         public int PosY { get { return _posY; } }
         public double X { get { return _x; } }
@@ -35,7 +35,7 @@ namespace Doo.Machine.HTM
         public double ActiveDutyCycle { get { return _activeDutyCycle; } }
         public double OverlapDutyCycle { get { return _overlapDutyCycle; } }
         
-        public HTMColumn(HTMRegion region, int posX, int posY, double x, double y)
+        public HTMColumn(HTMRegionAgent region, int posX, int posY, double x, double y)
         {
             _region = region;
             _posX = posX;
