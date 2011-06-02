@@ -104,9 +104,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Media\QuickTimeSample.mov">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Properties\stopImage.png" />
     <None Include="Properties\stepImage.png" />
     <None Include="Properties\startImage.png" />
