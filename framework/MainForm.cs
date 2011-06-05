@@ -117,6 +117,7 @@ namespace Doo
         void stepNetButton_Click(object sender, EventArgs e)
         {
             Step();
+            UpdateCycleTextBox();
         }
 
         void startNetButton_Click(object sender, EventArgs e)
@@ -141,9 +142,6 @@ namespace Doo
                 return false;
             if (!_agn.Step())
                 return false;
-
-            if ((_cycle & 3) == 3) // update cycle text box every 4 cycle
-                UpdateCycleTextBox();
             return true;
         }
 
@@ -165,6 +163,13 @@ namespace Doo
                 Application.DoEvents();
                 if (!Step())
                     _stopLoop = true;
+                if (int.Parse(breakAtStepTextBox.Text) != 0)
+                {
+                    if (_cycle == int.Parse(breakAtStepTextBox.Text))
+                        _stopLoop = true;
+                }
+                if ((_cycle & 3) == 3) // update cycle text box every 4 cycle
+                    UpdateCycleTextBox();
             }
             LoopFinished();
         }
@@ -176,7 +181,7 @@ namespace Doo
                 Invoke(new LoopFinishedDelegate(LoopFinished));
                 return;
             }
-
+            UpdateCycleTextBox();
             Log("Loop interrupted.");
             startNetButton.Enabled = true;
             stepNetButton.Enabled = true;
@@ -230,7 +235,7 @@ namespace Doo
             // Set visual properties
             Form _envForm = (Form)_env;
             Form _agnForm = (Form)_agn;
-            _envForm.Location = new Point(500, 0);
+            _envForm.Location = new Point(510, 0);
             _envForm.Show();
             _env.Initialize(); // TO DO manage better the initialization process.
             _agnForm.Location = new Point(0, 250);

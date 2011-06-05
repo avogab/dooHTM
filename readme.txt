@@ -13,9 +13,17 @@ The application is in a early development and I do not guarantee that the source
 precisely the Numenta's algorithms and his intent.
 
 ===============
-Prerequisites=
+Prerequisites
 ===============
 .NET Framework 3.5
+
+===============
+Quick start
+===============
+- set the parameters on Environment form
+- set the parameters on Agent Control form
+- click on create
+- push step button or loop button.
 
 
 ===============

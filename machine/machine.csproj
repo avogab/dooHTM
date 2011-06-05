@@ -76,6 +76,12 @@
     <Compile Include="HTM\HTMCellsViewer.Designer.cs">
       <DependentUpon>HTMCellsViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="HTM\HTMCellViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HTM\HTMCellViewer.Designer.cs">
+      <DependentUpon>HTMCellViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="HTM\HTMColumn.cs" />
     <Compile Include="HTM\HTMRegionAgent.cs" />
     <Compile Include="HTM\HTMRegionViewer.cs">
@@ -104,6 +110,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HTM\HTMCellsViewer.resx">
       <DependentUpon>HTMCellsViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HTM\HTMCellViewer.resx">
+      <DependentUpon>HTMCellViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HTM\HTMRegionViewer.resx">
       <DependentUpon>HTMRegionViewer.cs</DependentUpon>

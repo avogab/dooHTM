@@ -55,18 +55,38 @@ namespace Doo.Machine
         public bool Initialize()
         {
             // Network param
-            _inputWidth = int.Parse(inputSizeComboBox.Text.Substring(0, 3));
-            _inputHeight = int.Parse(inputSizeComboBox.Text.Substring(6, 3));
-            _regionWidth = int.Parse(regionSizeComboBox.Text.Substring(0, 3));
-            _regionHeight = int.Parse(regionSizeComboBox.Text.Substring(6, 3));
-            int cellsPerColumn = int.Parse(networkSizeComboBox.Text.Substring(networkSizeComboBox.Text.Length - 1, 1));
-            int minimumOverlap = int.Parse(minimumOverlapTextBox.Text);
-            int desiredLocalActiviy = int.Parse(desiredLocalActivityTextBox.Text);
+            int cellsPerColumn;
+            int minimumOverlap;
+            int desiredLocalActiviy;
+            int segmentActivationThreshold;
+            double proximalSegmentCoverage;
+            try
+            {
+                _inputWidth = int.Parse(inputSizeComboBox.Text.Substring(0, 3));
+                _inputHeight = int.Parse(inputSizeComboBox.Text.Substring(6, 3));
+                _regionWidth = int.Parse(regionSizeComboBox.Text.Substring(0, 3));
+                _regionHeight = int.Parse(regionSizeComboBox.Text.Substring(6, 3));
+                cellsPerColumn = int.Parse(networkSizeComboBox.Text.Substring(networkSizeComboBox.Text.Length - 1, 1));
+                minimumOverlap = int.Parse(minimumOverlapTextBox.Text);
+                desiredLocalActiviy = int.Parse(desiredLocalActivityTextBox.Text);
+                segmentActivationThreshold = int.Parse(segmentActivationThresholdTextBox.Text);
+                proximalSegmentCoverage = double.Parse(proximalSegmentCoverageTextBox.Text) / 100;
+            }
+            catch (Exception exch)
+            {
+                _director.Log(exch.ToString());
+                return false;
+            }
+            if (proximalSegmentCoverage < 0 && proximalSegmentCoverage > 1)
+            {
+                _director.Log("Proximal segment coverage out of range.");
+                return false;
+            }
 
             // Create the network.
             _preprocessAgent = new PreprocessAgent(_director, _inputWidth, _inputHeight, true);
             _preprocessAgent.InputAgent = this.InputAgent; // Redirect the input to the first node of the network.
-            _regionAgent = new HTMRegionAgent(_director, _inputWidth, _inputHeight, _regionWidth, _regionHeight, cellsPerColumn, minimumOverlap, desiredLocalActiviy, 4);
+            _regionAgent = new HTMRegionAgent(_director, _inputWidth, _inputHeight, _regionWidth, _regionHeight, cellsPerColumn, minimumOverlap, desiredLocalActiviy, segmentActivationThreshold, proximalSegmentCoverage);
             _regionAgent.InputAgent = _preprocessAgent;
             _preprocessAgent.Initialize();
             _regionAgent.Initialize();
@@ -105,7 +125,8 @@ namespace Doo.Machine
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Initialize();
+            if (!Initialize())
+                return;
             structureGroupBox.Enabled = false;
             detectMotionCheckBox.Enabled = true;
         }

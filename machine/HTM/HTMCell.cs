@@ -23,6 +23,23 @@ namespace Doo.Machine.HTM
         public double Y { get { return _y; } set { _y = value; } }
         public List<HTMSegment> DistalSegments { get { return _distalSegments; } }
         public List<SegmentUpdate> SegmentUpdateList { get { return _segmentUpdateList; } }
+        public string State {
+            get {
+                string str = "";
+                if (GetActive(0))
+                    str += "Active";
+                else if (!GetActive(0))
+                    str += "Unactive";
+                //else
+                //{
+                    if (GetPredicting(0))
+                        str += "Predicting";
+                    if (GetLearning(0))
+                        str += "Learning";
+                //}
+                return str;
+            }
+        }
 
         // Constructor for a cell not belonging to a column.
         public HTMCell()
@@ -153,6 +170,23 @@ namespace Doo.Machine.HTM
             return learningCells;
         }
 
+        // Return all the active cells in the near columns (within the inibition radius).
+        // TO DO: get a random sample.
+        public List<HTMCell> GetRandomActiveCells(int t)
+        {
+            List<HTMCell> activeCells = new List<HTMCell>();
+            List<HTMColumn> columns = this.Column.Region.Neighbors(this.Column);
+            foreach (HTMColumn col in columns)
+            {
+                //if (col == this.Column) // exclude herself
+                //    continue;
+                foreach (HTMCell cell in col.Cells)
+                    if (cell.GetActive(t))
+                        activeCells.Add(cell);
+            }
+            return activeCells;
+        }
+
         // Return a segmentUpdate data structure containing a list of proposed changes to segment.
         // Let activeSynapses be the list of active synapses where the originating cells have
         // their activeState output = 1 at time step t.
@@ -176,7 +210,9 @@ namespace Doo.Machine.HTM
 
             int newSynapseCount = Math.Max(0, _newSynapseCount - segmentUpdate.ActiveSynapses.Count);
 
+            //List<HTMCell> learningCells = GetRandomActiveCells(t);
             List<HTMCell> learningCells = GetRandomLearningCells(t);
+
             newSynapseCount = Math.Min(newSynapseCount, learningCells.Count);
 
             // Truncate the array of learning cells. To do : get a random sample of the array.
@@ -260,7 +296,7 @@ namespace Doo.Machine.HTM
                         segment = segInfo.Segment;
                     else
                     {
-                        segment = new HTMSegment(this);                        
+                        segment = new HTMSegment(this, _column.Region.SegmentActivationThreshold);
                         _distalSegments.Add(segment);
                         _column.Region.Director.Log("Created new distal segment on a cell on column " + segment.Cell.Column.PosX.ToString() + "," + segment.Cell.Column.PosY.ToString());
                     }

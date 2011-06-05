@@ -19,7 +19,8 @@ namespace Doo.Machine.HTM
         Bitmap _bitmap;
         Graphics _g;
         Graphics _g1;
-        Point _lastMouseClick;
+        int halfColSize = 4;
+        List<HTMCellViewer> _cellViewers;
 
         //public HTMRegionViewerPropertyShowed PropertyShowed { get { return _propertyShowed; } set { _propertyShowed = value; } }
         public int IndexInColumn { get { return _indexInColumn; } set { _indexInColumn = value; } }
@@ -34,11 +35,11 @@ namespace Doo.Machine.HTM
             _learningCellBrush = new SolidBrush(Color.Green);
             _backgroundColor = Color.White;
             this.Width = width;
-            this.Height = height + 10; // add the label's height.
+            this.Height = height + layerLabel.Height;
             _bitmap = new Bitmap(width, height);
             _g = Graphics.FromImage(_bitmap);
             _g1 = this.CreateGraphics();
-            _lastMouseClick = new Point();
+            _cellViewers = new List<HTMCellViewer>();
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -49,7 +50,6 @@ namespace Doo.Machine.HTM
                 return;
 
             int x1, y1, x2, y2;
-            int halfColSize = 4;  // TO DO: compute the value
             int width = _bitmap.Width;
             int height = _bitmap.Height;
             foreach (HTMColumn col in _region.Columns)
@@ -90,7 +90,12 @@ namespace Doo.Machine.HTM
                 }
             }
             //_g1.DrawRectangle(new Pen(new SolidBrush(Color.White)), 0, 0, width, 10);
-            _g1.DrawImageUnscaled(_bitmap, 0, 10);
+            _g1.DrawImageUnscaled(_bitmap, 0, layerLabel.Height);
+
+
+            // TO DO : move in other method!
+            foreach (HTMCellViewer cellViewer in _cellViewers)
+                cellViewer.UpdateView();
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -98,9 +103,39 @@ namespace Doo.Machine.HTM
             base.OnPaintBackground(e);
         }
 
+        private Point MouseToCell(int x, int y)
+        {
+            Point p = new Point();
+            int cx = (int)(_region.Width * (x) / (this.Width - halfColSize));
+            int cy = (int)(_region.Height * (y - layerLabel.Height) / (this.Height - layerLabel.Height - halfColSize));
+            if (cx < 0 || cx >= _region.Width)
+                p.X = -1;
+            else
+                p.X = cx;
+            if (cy < 0 || cy >= _region.Height)
+                p.Y = -1;
+            else
+                p.Y = cy;
+            return p;
+        }
+
         private void HTMCellsViewer_MouseClick(object sender, MouseEventArgs e)
         {
-            _lastMouseClick = e.Location;
+            Point p = MouseToCell(e.X, e.Y);
+            if (p.X == -1 || p.Y == -1)
+                return;
+            HTMCellViewer cellViewer = new HTMCellViewer(_region.Columns[p.X, p.Y].Cells[_indexInColumn]);
+            cellViewer.Show();
+            _cellViewers.Add(cellViewer);
+        }
+
+        private void HTMCellsViewer_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point p = MouseToCell(e.X, e.Y);
+            if (p.X == -1 || p.Y == -1)
+                cellPointedLabel.Text = "";
+            else
+                cellPointedLabel.Text = p.X + "," + p.Y;
         }
     }
 }

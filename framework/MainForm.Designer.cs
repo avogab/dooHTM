@@ -29,6 +29,8 @@
             this.macro1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.macro2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.breakAtStepLabel = new System.Windows.Forms.Label();
+            this.breakAtStepTextBox = new System.Windows.Forms.TextBox();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -70,7 +72,7 @@
             this.logListView.FullRowSelect = true;
             this.logListView.Location = new System.Drawing.Point(8, 39);
             this.logListView.Name = "logListView";
-            this.logListView.Size = new System.Drawing.Size(414, 77);
+            this.logListView.Size = new System.Drawing.Size(484, 77);
             this.logListView.TabIndex = 13;
             this.logListView.UseCompatibleStateImageBehavior = false;
             this.logListView.View = System.Windows.Forms.View.Details;
@@ -111,7 +113,7 @@
             // sleepLabel
             // 
             this.sleepLabel.AutoSize = true;
-            this.sleepLabel.Location = new System.Drawing.Point(231, 22);
+            this.sleepLabel.Location = new System.Drawing.Point(306, 22);
             this.sleepLabel.Name = "sleepLabel";
             this.sleepLabel.Size = new System.Drawing.Size(128, 13);
             this.sleepLabel.TabIndex = 17;
@@ -119,7 +121,7 @@
             // 
             // sleepBetweenStepTextBox
             // 
-            this.sleepBetweenStepTextBox.Location = new System.Drawing.Point(365, 19);
+            this.sleepBetweenStepTextBox.Location = new System.Drawing.Point(440, 19);
             this.sleepBetweenStepTextBox.Name = "sleepBetweenStepTextBox";
             this.sleepBetweenStepTextBox.Size = new System.Drawing.Size(48, 20);
             this.sleepBetweenStepTextBox.TabIndex = 18;
@@ -131,6 +133,8 @@
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.breakAtStepTextBox);
+            this.panel2.Controls.Add(this.breakAtStepLabel);
             this.panel2.Controls.Add(this.startNetButton);
             this.panel2.Controls.Add(this.stopNetButton);
             this.panel2.Controls.Add(this.sleepBetweenStepTextBox);
@@ -138,7 +142,7 @@
             this.panel2.Controls.Add(this.stepNetButton);
             this.panel2.Location = new System.Drawing.Point(3, 27);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(436, 54);
+            this.panel2.Size = new System.Drawing.Size(500, 54);
             this.panel2.TabIndex = 20;
             // 
             // startNetButton
@@ -164,7 +168,7 @@
             this.panel3.Controls.Add(this.logListView);
             this.panel3.Location = new System.Drawing.Point(3, 87);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(436, 131);
+            this.panel3.Size = new System.Drawing.Size(500, 131);
             this.panel3.TabIndex = 21;
             // 
             // menuStrip1
@@ -173,7 +177,7 @@
             this.runMacro1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(442, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(503, 24);
             this.menuStrip1.TabIndex = 22;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -201,11 +205,29 @@
             this.macro2ToolStripMenuItem.Text = "macro2";
             this.macro2ToolStripMenuItem.Click += new System.EventHandler(this.macro2ToolStripMenuItem_Click);
             // 
+            // breakAtStepLabel
+            // 
+            this.breakAtStepLabel.AutoSize = true;
+            this.breakAtStepLabel.Location = new System.Drawing.Point(177, 22);
+            this.breakAtStepLabel.Name = "breakAtStepLabel";
+            this.breakAtStepLabel.Size = new System.Drawing.Size(70, 13);
+            this.breakAtStepLabel.TabIndex = 19;
+            this.breakAtStepLabel.Text = "Break at step";
+            // 
+            // breakAtStepTextBox
+            // 
+            this.breakAtStepTextBox.Location = new System.Drawing.Point(253, 19);
+            this.breakAtStepTextBox.Name = "breakAtStepTextBox";
+            this.breakAtStepTextBox.Size = new System.Drawing.Size(38, 20);
+            this.breakAtStepTextBox.TabIndex = 20;
+            this.breakAtStepTextBox.Text = "0";
+            this.breakAtStepTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(442, 222);
+            this.ClientSize = new System.Drawing.Size(503, 222);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.menuStrip1);
@@ -247,6 +269,8 @@
         private System.Windows.Forms.ToolStripMenuItem macro1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem macro2ToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.TextBox breakAtStepTextBox;
+        private System.Windows.Forms.Label breakAtStepLabel;
     }
 }
 

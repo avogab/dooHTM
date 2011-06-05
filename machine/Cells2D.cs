@@ -43,8 +43,14 @@ namespace Doo.Machine
                 for (int iy = 0; iy < height; iy++)
                 {
                     _cells[ix, iy] = new T();
-                    _cells[ix, iy].X = (double)ix / (double)(width - 1);
-                    _cells[ix, iy].Y = (double)iy / (double)(height - 1);
+                    if (width > 1)
+                        _cells[ix, iy].X = (double)ix / (double)(width - 1);
+                    else
+                        _cells[ix, iy].X = 0.5;
+                    if (height > 1)
+                        _cells[ix, iy].Y = (double)iy / (double)(height - 1);
+                    else
+                        _cells[ix, iy].Y = 0.5;
                 }
         }
         

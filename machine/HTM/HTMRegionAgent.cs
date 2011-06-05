@@ -17,6 +17,7 @@ namespace Doo.Machine.HTM
         HTMColumn[,] _columns;
         int _minOverlap;
         int _desiredLocalActivity;
+        int _segmentActivationThreshold;
         double _inhibitionRadius;  // Average connected receptive field size of the columns.
         bool _doSpatialLearning;
         bool _doTemporalLearning;
@@ -25,7 +26,7 @@ namespace Doo.Machine.HTM
         int _correctPrediction;
         Cells2D<HTMCell> _inputCells;
         Cells2D<HTMCell> _outputCells;
-        int _distalSegmentSpan;
+        double _proximalSegmentCoverage;
 
         public IDirector Director { get { return _director; } set { _director = value; } }
         public IAgent InputAgent { get { return _inputAgent; } set { _inputAgent = value; } }
@@ -35,6 +36,7 @@ namespace Doo.Machine.HTM
         internal HTMColumn[,] Columns { get { return _columns; } }
         public double MinOverlap { get { return _minOverlap; } }
         public int DesiredLocalActivity { get { return _desiredLocalActivity; } }
+        public int SegmentActivationThreshold { get { return _segmentActivationThreshold; } }
         public double InhibitionRadius { get { return _inhibitionRadius; } }
         public bool DoSpatialLearning { get { return _doSpatialLearning; } set { _doSpatialLearning = value; } }
         public bool DoTemporalLearning { get { return _doTemporalLearning; } set { _doTemporalLearning = value; } }
@@ -46,8 +48,10 @@ namespace Doo.Machine.HTM
         // param cellsPerColumn: Number of (temporal context) cells to use for each column.
         // param minOverlap: the minimum number of inputs that must be active for a column to be considered during the inhibition step.
         // param desiredLocalActivity number of columns that will be winners after the inhibition step.
+        // param segmentActivationThreshold: the minimum number of synapse that must be active to activate a segment.
+        // param proximalSegmentCoverage: the percentage of input matrix that belongs to each column (of course each column overlap with the other).
         public HTMRegionAgent(IDirector director, int inputWidth, int inputHeight, int regionWidth, int regionHeight, int cellsPerColumn,
-            int minOverlap, int desiredLocalActivity, int distalSegmentSpan)
+            int minOverlap, int desiredLocalActivity, int segmentActivationThreshold, double proximalSegmentCoverage)
         {
             _director = director;
             _inputWidth = inputWidth;
@@ -57,7 +61,8 @@ namespace Doo.Machine.HTM
             _cellsPerColumn = cellsPerColumn;
             _minOverlap = minOverlap;
             _desiredLocalActivity = desiredLocalActivity;
-            _distalSegmentSpan = distalSegmentSpan;
+            _segmentActivationThreshold = segmentActivationThreshold;
+            _proximalSegmentCoverage = proximalSegmentCoverage;
             _doSpatialLearning = true;
             _doTemporalLearning = true;
             
@@ -67,9 +72,23 @@ namespace Doo.Machine.HTM
 
             // Create the columns
             _columns = new HTMColumn[_width, _height];
+            double x;
+            double y;
             for (int cx = 0; cx < _width; cx++)
+            {
                 for (int cy = 0; cy < _height; cy++)
-                    _columns[cx, cy] = new HTMColumn(this, cx, cy, (cx + 0.5)/_width, (cy + 0.5)/_height);
+                {
+                    if (_width > 1)
+                        x = (cx + 0.5) / _width;
+                    else
+                        x = 0.5;
+                    if (_height > 1)
+                        y = (cy + 0.5) / _height;
+                    else
+                        y = 0.5;
+                    _columns[cx, cy] = new HTMColumn(this, cx, cy, x, y);
+                }
+            }
 
             // Create the output matrix.
             _outputCells = new Cells2D<HTMCell>(_width, _height);
@@ -121,14 +140,15 @@ namespace Doo.Machine.HTM
         // Return all the columns within inhibitionRadius of the input column.
         internal List<HTMColumn> Neighbors(HTMColumn column)
         {
-            int irad = (int)System.Math.Round(_inhibitionRadius);
-            int x0 = Math.Max(0, Math.Min(column.PosX - 1, column.PosX - irad));
-            int y0 = Math.Max(0, Math.Min(column.PosY - 1, column.PosY - irad));
-            int x1 = Math.Min(_width - 1, Math.Max(column.PosX + 1, column.PosX + irad));
-            int y1 = Math.Min(_height - 1, Math.Max(column.PosY + 1, column.PosY + irad));
+            int iradX = (int)(_inhibitionRadius * _width * 2);
+            int iradY = (int)(_inhibitionRadius * _height * 2);
+            int x0 = Math.Max(0, Math.Min(column.PosX - 1, column.PosX - iradX));
+            int y0 = Math.Max(0, Math.Min(column.PosY - 1, column.PosY - iradY));
+            int x1 = Math.Min(_width - 1, Math.Max(column.PosX + 1, column.PosX + iradX));
+            int y1 = Math.Min(_height - 1, Math.Max(column.PosY + 1, column.PosY + iradY));
             
             List<HTMColumn> cols = new List<HTMColumn>( (x1 - x0 + 1) * (y1 - y0 + 1) );
-            // TO DO : filter only the colomn within a circle and not a rectangle!
+            // TO DO : filter the column within a circle and not a rectangle!
             for (int x = x0; x <= x1; x++)
                 for (int y = y0; y <= y1; y++)
                     cols.Add(_columns[x, y]);
@@ -364,7 +384,7 @@ namespace Doo.Machine.HTM
             foreach (HTMColumn col in _columns)
             {
                 // TO DO : get a random sample from the input matrix
-                List<HTMCell> cells = _inputCells.GetRectangle(col.X, col.Y, _distalSegmentSpan, _distalSegmentSpan);
+                List<HTMCell> cells = _inputCells.GetRectangle(col.X, col.Y, (int)(_inputCells.Width * _proximalSegmentCoverage), (int)(_inputCells.Height * _proximalSegmentCoverage));
                 foreach (HTMCell c in cells)
                 {
                     permanence = _random.NextGauss(HTMSynapse._connectedPermanence, HTMSynapse._permanenceIncrement * 2.0, true);

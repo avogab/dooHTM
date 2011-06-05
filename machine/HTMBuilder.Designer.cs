@@ -18,12 +18,16 @@
             this.preprocessGroupBox = new System.Windows.Forms.GroupBox();
             this.detectMotionCheckBox = new System.Windows.Forms.CheckBox();
             this.structureGroupBox = new System.Windows.Forms.GroupBox();
+            this.proximalSegmentCoverageTextBox = new System.Windows.Forms.TextBox();
+            this.proximalSegmentCoverageLabel = new System.Windows.Forms.Label();
+            this.segmentActivationThresholdTextBox = new System.Windows.Forms.TextBox();
+            this.segmentActivationThresholdLabel = new System.Windows.Forms.Label();
+            this.desiredLocalActivityTextBox = new System.Windows.Forms.TextBox();
+            this.minimumOverlapTextBox = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.minimumOverlapLabel = new System.Windows.Forms.Label();
             this.networkSizeComboBox = new System.Windows.Forms.ComboBox();
             this.networkSizeLabel = new System.Windows.Forms.Label();
-            this.minimumOverlapLabel = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.minimumOverlapTextBox = new System.Windows.Forms.TextBox();
-            this.desiredLocalActivityTextBox = new System.Windows.Forms.TextBox();
             this.preprocessGroupBox.SuspendLayout();
             this.structureGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -67,7 +71,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(225, 152);
+            this.button1.Location = new System.Drawing.Point(225, 194);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 10;
@@ -78,7 +82,7 @@
             // preprocessGroupBox
             // 
             this.preprocessGroupBox.Controls.Add(this.detectMotionCheckBox);
-            this.preprocessGroupBox.Location = new System.Drawing.Point(3, 195);
+            this.preprocessGroupBox.Location = new System.Drawing.Point(3, 226);
             this.preprocessGroupBox.Name = "preprocessGroupBox";
             this.preprocessGroupBox.Size = new System.Drawing.Size(308, 45);
             this.preprocessGroupBox.TabIndex = 12;
@@ -88,8 +92,6 @@
             // detectMotionCheckBox
             // 
             this.detectMotionCheckBox.AutoSize = true;
-            this.detectMotionCheckBox.Checked = true;
-            this.detectMotionCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.detectMotionCheckBox.Enabled = false;
             this.detectMotionCheckBox.Location = new System.Drawing.Point(14, 19);
             this.detectMotionCheckBox.Name = "detectMotionCheckBox";
@@ -101,6 +103,10 @@
             // 
             // structureGroupBox
             // 
+            this.structureGroupBox.Controls.Add(this.proximalSegmentCoverageTextBox);
+            this.structureGroupBox.Controls.Add(this.proximalSegmentCoverageLabel);
+            this.structureGroupBox.Controls.Add(this.segmentActivationThresholdTextBox);
+            this.structureGroupBox.Controls.Add(this.segmentActivationThresholdLabel);
             this.structureGroupBox.Controls.Add(this.desiredLocalActivityTextBox);
             this.structureGroupBox.Controls.Add(this.minimumOverlapTextBox);
             this.structureGroupBox.Controls.Add(this.label2);
@@ -114,10 +120,82 @@
             this.structureGroupBox.Controls.Add(this.regionSize);
             this.structureGroupBox.Location = new System.Drawing.Point(3, 3);
             this.structureGroupBox.Name = "structureGroupBox";
-            this.structureGroupBox.Size = new System.Drawing.Size(308, 186);
+            this.structureGroupBox.Size = new System.Drawing.Size(308, 223);
             this.structureGroupBox.TabIndex = 13;
             this.structureGroupBox.TabStop = false;
             this.structureGroupBox.Text = "Structure";
+            // 
+            // proximalSegmentCoverageTextBox
+            // 
+            this.proximalSegmentCoverageTextBox.Location = new System.Drawing.Point(171, 173);
+            this.proximalSegmentCoverageTextBox.Name = "proximalSegmentCoverageTextBox";
+            this.proximalSegmentCoverageTextBox.Size = new System.Drawing.Size(32, 20);
+            this.proximalSegmentCoverageTextBox.TabIndex = 18;
+            this.proximalSegmentCoverageTextBox.Text = "10";
+            this.proximalSegmentCoverageTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // proximalSegmentCoverageLabel
+            // 
+            this.proximalSegmentCoverageLabel.AutoSize = true;
+            this.proximalSegmentCoverageLabel.Location = new System.Drawing.Point(11, 176);
+            this.proximalSegmentCoverageLabel.Name = "proximalSegmentCoverageLabel";
+            this.proximalSegmentCoverageLabel.Size = new System.Drawing.Size(154, 13);
+            this.proximalSegmentCoverageLabel.TabIndex = 17;
+            this.proximalSegmentCoverageLabel.Text = "Proximal segment coverage (%)";
+            // 
+            // segmentActivationThresholdTextBox
+            // 
+            this.segmentActivationThresholdTextBox.Location = new System.Drawing.Point(170, 149);
+            this.segmentActivationThresholdTextBox.Name = "segmentActivationThresholdTextBox";
+            this.segmentActivationThresholdTextBox.Size = new System.Drawing.Size(33, 20);
+            this.segmentActivationThresholdTextBox.TabIndex = 16;
+            this.segmentActivationThresholdTextBox.Text = "2";
+            this.segmentActivationThresholdTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // segmentActivationThresholdLabel
+            // 
+            this.segmentActivationThresholdLabel.AutoSize = true;
+            this.segmentActivationThresholdLabel.Location = new System.Drawing.Point(11, 152);
+            this.segmentActivationThresholdLabel.Name = "segmentActivationThresholdLabel";
+            this.segmentActivationThresholdLabel.Size = new System.Drawing.Size(144, 13);
+            this.segmentActivationThresholdLabel.TabIndex = 15;
+            this.segmentActivationThresholdLabel.Text = "Segment activation threshold";
+            // 
+            // desiredLocalActivityTextBox
+            // 
+            this.desiredLocalActivityTextBox.Location = new System.Drawing.Point(171, 126);
+            this.desiredLocalActivityTextBox.Name = "desiredLocalActivityTextBox";
+            this.desiredLocalActivityTextBox.Size = new System.Drawing.Size(32, 20);
+            this.desiredLocalActivityTextBox.TabIndex = 14;
+            this.desiredLocalActivityTextBox.Text = "5";
+            this.desiredLocalActivityTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // minimumOverlapTextBox
+            // 
+            this.minimumOverlapTextBox.Location = new System.Drawing.Point(171, 100);
+            this.minimumOverlapTextBox.Name = "minimumOverlapTextBox";
+            this.minimumOverlapTextBox.Size = new System.Drawing.Size(32, 20);
+            this.minimumOverlapTextBox.TabIndex = 13;
+            this.minimumOverlapTextBox.Text = "3";
+            this.minimumOverlapTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(11, 129);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(104, 13);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Desired local activity";
+            // 
+            // minimumOverlapLabel
+            // 
+            this.minimumOverlapLabel.AutoSize = true;
+            this.minimumOverlapLabel.Location = new System.Drawing.Point(11, 103);
+            this.minimumOverlapLabel.Name = "minimumOverlapLabel";
+            this.minimumOverlapLabel.Size = new System.Drawing.Size(86, 13);
+            this.minimumOverlapLabel.TabIndex = 11;
+            this.minimumOverlapLabel.Text = "Minimum overlap";
             // 
             // networkSizeComboBox
             // 
@@ -137,47 +215,11 @@
             this.networkSizeLabel.TabIndex = 7;
             this.networkSizeLabel.Text = "Network size (regions x cells in column)";
             // 
-            // minimumOverlapLabel
-            // 
-            this.minimumOverlapLabel.AutoSize = true;
-            this.minimumOverlapLabel.Location = new System.Drawing.Point(11, 103);
-            this.minimumOverlapLabel.Name = "minimumOverlapLabel";
-            this.minimumOverlapLabel.Size = new System.Drawing.Size(86, 13);
-            this.minimumOverlapLabel.TabIndex = 11;
-            this.minimumOverlapLabel.Text = "Minimum overlap";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 129);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(104, 13);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "Desired local activity";
-            // 
-            // minimumOverlapTextBox
-            // 
-            this.minimumOverlapTextBox.Location = new System.Drawing.Point(127, 100);
-            this.minimumOverlapTextBox.Name = "minimumOverlapTextBox";
-            this.minimumOverlapTextBox.Size = new System.Drawing.Size(32, 20);
-            this.minimumOverlapTextBox.TabIndex = 13;
-            this.minimumOverlapTextBox.Text = "3";
-            this.minimumOverlapTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // desiredLocalActivityTextBox
-            // 
-            this.desiredLocalActivityTextBox.Location = new System.Drawing.Point(127, 126);
-            this.desiredLocalActivityTextBox.Name = "desiredLocalActivityTextBox";
-            this.desiredLocalActivityTextBox.Size = new System.Drawing.Size(32, 20);
-            this.desiredLocalActivityTextBox.TabIndex = 14;
-            this.desiredLocalActivityTextBox.Text = "5";
-            this.desiredLocalActivityTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
             // HTMBuilder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(315, 246);
+            this.ClientSize = new System.Drawing.Size(315, 274);
             this.Controls.Add(this.structureGroupBox);
             this.Controls.Add(this.preprocessGroupBox);
             this.Name = "HTMBuilder";
@@ -210,6 +252,10 @@
         private System.Windows.Forms.TextBox minimumOverlapTextBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label minimumOverlapLabel;
+        private System.Windows.Forms.Label segmentActivationThresholdLabel;
+        private System.Windows.Forms.TextBox segmentActivationThresholdTextBox;
+        private System.Windows.Forms.Label proximalSegmentCoverageLabel;
+        private System.Windows.Forms.TextBox proximalSegmentCoverageTextBox;
 
     }
 }
