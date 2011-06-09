@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Doo.Machine
 {
     // This class is utilized to group cells arranged by a two-dimensional matrix.
-    // The comunser of this class typically ignore the width and height of the underneath matrix
+    // The consumer of this class could ignore the width and height of the underneath matrix
     // so to access each element it will use the indexer: T this[double x, double y].
     public class Cells2D<T> where T : ISpatialCell, new()
     {
@@ -43,6 +43,8 @@ namespace Doo.Machine
                 for (int iy = 0; iy < height; iy++)
                 {
                     _cells[ix, iy] = new T();
+                    _cells[ix, iy].PosX = ix;
+                    _cells[ix, iy].PosY = iy;
                     if (width > 1)
                         _cells[ix, iy].X = (double)ix / (double)(width - 1);
                     else

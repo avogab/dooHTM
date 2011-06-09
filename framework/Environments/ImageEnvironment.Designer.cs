@@ -1,6 +1,6 @@
 namespace Doo.Environments
 {
-    partial class BasicEnvironment
+    partial class ImageEnvironment
     {
         #region Windows Form Designer generated code
         /// <summary>
@@ -240,7 +240,7 @@ namespace Doo.Environments
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "BasicEnvironment";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Environment";
+            this.Text = "Image Environment";
             ((System.ComponentModel.ISupportInitialize)(this.frameBox)).EndInit();
             this.tabControl.ResumeLayout(false);
             this.generatedSourceTab.ResumeLayout(false);
@@ -274,8 +274,6 @@ namespace Doo.Environments
         private System.Windows.Forms.Label movementLabel;
 
         #endregion
-
-
     }
 }
 

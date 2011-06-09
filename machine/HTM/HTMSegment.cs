@@ -13,7 +13,7 @@ namespace Doo.Machine.HTM
         public HTMCell Cell { get { return _cell; } }
         public bool IsSequence { get { return _isSequence; } set { _isSequence = value; } }
         public List<HTMSynapse> Synapses { get { return _synapses; } set { _synapses = value; } }
-  
+
         public HTMSegment(HTMCell cell, int activationThreshold)
         {
             _cell = cell;

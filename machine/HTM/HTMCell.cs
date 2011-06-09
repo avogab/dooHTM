@@ -6,26 +6,30 @@ namespace Doo.Machine.HTM
     public class HTMCell : ISpatialCell
     {
         HTMColumn _column;
-        double _x;
-        double _y;
-        // double _z;
+        int _posX;  // the cell's x position inside the parent matrix.
+        int _posY;  // the cell's y position inside the parent matrix.
+        double _x;  // the cell's x spatial position.
+        double _y;  // the cell's y spatial position.
+        int _indexInColumn;
         bool[] _active;
         bool[] _predicting;
         bool[] _learning;
         List<HTMSegment> _distalSegments;
         List<SegmentUpdate> _segmentUpdateList;
-        const int _minSynapsesPerSegmentThreshold = 5;
         const int _stateStored = 3;
         const int _newSynapseCount = 3; // The maximum number of synapses added to a segment during a learning's step.
 
         public HTMColumn Column { get { return _column; } }
+        public int PosX { get { return _posX; } set { _posX = value; } }
+        public int PosY { get { return _posY; } set { _posY = value; } }
         public double X { get { return _x; } set { _x = value; } }
         public double Y { get { return _y; } set { _y = value; } }
+        public int IndexInColumn { get { return _indexInColumn; } set { _indexInColumn = value; } }
         public List<HTMSegment> DistalSegments { get { return _distalSegments; } }
         public List<SegmentUpdate> SegmentUpdateList { get { return _segmentUpdateList; } }
-        public string State {
+        public string StateToString {
             get {
-                string str = "";
+                string str = "At  0: ";
                 if (GetActive(0))
                     str += "Active";
                 else if (!GetActive(0))
@@ -36,6 +40,19 @@ namespace Doo.Machine.HTM
                         str += "Predicting";
                     if (GetLearning(0))
                         str += "Learning";
+                //}
+                str += Environment.NewLine;
+                str += "At -1: ";
+                if (GetActive(-1))
+                    str += "Active";
+                else if (!GetActive(-1))
+                    str += "Unactive";
+                //else
+                //{
+                if (GetPredicting(-1))
+                    str += "Predicting";
+                if (GetLearning(-1))
+                    str += "Learning";
                 //}
                 return str;
             }
@@ -52,12 +69,13 @@ namespace Doo.Machine.HTM
         }
 
         // Constructor for a cell belonging to a column.
-        public HTMCell(HTMColumn column)
+        public HTMCell(HTMColumn column, int indexInColumn)
             : this()
         {
             _x = column.X;
             _y = column.Y;
             _column = column;
+            _indexInColumn = indexInColumn;
         }
 
         // Get the active state of the cell at time t.
@@ -230,7 +248,7 @@ namespace Doo.Machine.HTM
         public HTMSegment GetBestMatchingSegment(int t, bool sequence)
         {
             HTMSegment bestSegment = null;
-            int bestSynapseCount = _minSynapsesPerSegmentThreshold;
+            int bestSynapseCount = _column.Region.MinSegmentActivityForLearning;
             int synCount;
             foreach (HTMSegment seg in _distalSegments)
             {

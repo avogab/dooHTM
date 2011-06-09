@@ -10,7 +10,7 @@ using Emgu.Util;
 
 namespace Doo.Environments
 {
-    public partial class BasicEnvironment : Form, IAgent
+    public partial class ImageEnvironment : Form, IAgent
     {
         IDirector _director;
         Capture _capture;
@@ -28,7 +28,7 @@ namespace Doo.Environments
 
         public IAgent InputAgent { get { return null; } set { ; } }
 
-        public BasicEnvironment(IDirector director)
+        public ImageEnvironment(IDirector director)
         {
             InitializeComponent();
             _director = director;

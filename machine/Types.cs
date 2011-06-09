@@ -8,6 +8,8 @@ namespace Doo.Machine
     {
         bool GetActive(int time);
         void SetActive(bool value);
+        int PosX { get; set; }
+        int PosY { get; set; }
         double X { get; set; }
         double Y { get; set; }
         void Step();

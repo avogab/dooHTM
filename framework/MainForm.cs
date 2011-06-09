@@ -8,13 +8,13 @@ using System.Threading;
 using Doo;
 using Doo.Environments;
 using Doo.Machine;
+using Doo.Machine.HTM;
 
 namespace Doo
 {
     public partial class MainForm : Form, IDirector
     {
-        IAgent _env;
-        IAgent _agn;
+        List<IAgent> _agents;
         Thread _loopThread;
         bool _stopLoop;
         long _cycle;
@@ -26,57 +26,16 @@ namespace Doo
         public MainForm()
         {
             InitializeComponent();
+            this.WindowState = FormWindowState.Maximized;
             _cycle = 0;
             _logCounter = 0;
-
-            // TO DO: dinamically iterate available environment classes
-            //try
-            //{
-            //    Assembly assembly = Assembly.LoadFrom("experiment.dll");
-            //    string s;
-            //    Type t = null;
-            //    foreach (Type type in assembly.GetTypes())
-            //    {
-            //        Console.WriteLine(type.Name);
-            //        if (type.Name == "Env")
-            //            environmentsComboBox.Items.Add(type.Name);
-            //    }
-            //}
-            //catch (Exception exch)
-            //{
-            //}
-            //environmentsComboBox.Items.Add("BasicEnvironment");
-            //environmentsComboBox.SelectedIndex = environmentsComboBox.Items.Count - 1;
-
-            //CreateMainNet();
-
-            BaseScript();
+            _agents = new List<IAgent>();
         }
 
-        void CreateMainNet()
-        {
-            _env = new BasicEnvironment(this);
-            _agn = new HTMBuilder(this);
-            _agn.InputAgent = _env;   // link the agent to the environment
-            
-            // Set visual properties
-            Form _envForm = (Form)_env;
-            Form _agnForm = (Form)_agn;
-            _envForm.Location = new Point(500, 0);
-            _envForm.Show();
-            _env.Initialize(); // TO DO manage better the initialization process.
-            _agnForm.Location = new Point(0, 250);
-            _agnForm.Show();
-
-            this.Log("Main classes created.");
-            startNetButton.Enabled = true;
-            stepNetButton.Enabled = true;
-            stopNetButton.Enabled = false;
-        }
-        
         protected override void Dispose(bool disposing)
         {
             _stopLoop = true;
+            //_loopThread.Join();
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -84,64 +43,12 @@ namespace Doo
             base.Dispose(disposing);
         }
 
-        // TO DO: dinamically create agent and environment class
-        //void initNetButton_Click(object sender, EventArgs e)
-        //{
-            //switch (environmentsComboBox.Text)
-            //{
-            //    case "BasicEnvironment":
-            //        _env = new BasicEnvironment();
-            //        break;
-            //}
-            //t = Type.GetType("Doo.Environments.EnvironmentL010");
-            //IEnvironment env = (IEnvironment)Activator.CreateInstance(t, new object[] { 5, 5 });
-
-            //_agn = new Doo.Machine.AgentControl(this);
-            //_env.SetAgent(_agn);
-
-            //_agn.Show();
-            //_env.Show();
-
-            //
-            //_env.Initialize(); // TO DO: the initialization must be better managed. it could conflict with change in environment mode combobox.
-        //    _agn.Initialize();
-        //    Log("Inizialization OK");
-
-        //    //
-        //    initNetButton.Enabled = false;
-        //    startNetButton.Enabled = true;
-        //    stepNetButton.Enabled = true;
-        //    stopNetButton.Enabled = false;
-        //}
-
-        void stepNetButton_Click(object sender, EventArgs e)
-        {
-            Step();
-            UpdateCycleTextBox();
-        }
-
-        void startNetButton_Click(object sender, EventArgs e)
-        {
-            _stopLoop = false;
-            _loopThread = new Thread(Loop);
-            _loopThread.Start();
-            startNetButton.Enabled = false;
-            stepNetButton.Enabled = false;
-            stopNetButton.Enabled = true;
-        }
-
-        private void stopNetButton_Click(object sender, EventArgs e)
-        {
-            _stopLoop = true;
-        }
-
         bool Step()
         {
             _cycle++;
-            if (!_env.Step())
-                return false;
-            if (!_agn.Step())
-                return false;
+            foreach (IAgent agn in _agents)
+                if (!agn.Step())
+                    return false;
             return true;
         }
 
@@ -183,16 +90,15 @@ namespace Doo
             }
             UpdateCycleTextBox();
             Log("Loop interrupted.");
-            startNetButton.Enabled = true;
-            stepNetButton.Enabled = true;
-            stopNetButton.Enabled = false;
+            startButton.Enabled = true;
+            stepButton.Enabled = true;
+            stopButton.Enabled = false;
         }
 
         void logListView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (logListView.SelectedItems == null)
                 return;
-
             string str = logListView.SelectedItems[0].SubItems[2].Text;
             MessageBox.Show(str);
         }
@@ -215,36 +121,95 @@ namespace Doo
             _stopLoop = true;
         }
 
-        private void macro1ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void imageDesktopButton_Click(object sender, EventArgs e)
         {
-            BaseScript();
+            ImageEnvironment env = new ImageEnvironment(this);
+            _agents.Add(env);
+            ImagePreprocessor preprocessor = new ImagePreprocessor(this);
+            _agents.Add(preprocessor);
+            HTMBuilder htmBuilder = new HTMBuilder(this);
+            _agents.Add(htmBuilder);
+            preprocessor.InputAgent = env;   // link the preprocessor to the environment
+            htmBuilder.InputAgent = preprocessor;   // link the htm builder to the preprocessor
+
+            // Set the layout
+            preprocessor.MdiParent = this;
+            preprocessor.Location = new Point(0, 0);
+            preprocessor.Show();
+            htmBuilder.MdiParent = this;
+            htmBuilder.Location = new Point(0, preprocessor.Height);
+            htmBuilder.Show();
+            env.MdiParent = this;
+            env.Location = new Point(preprocessor.Width, 0);
+            env.Show();
+            env.Initialize(); // TO DO manage better the initialization process.
+
+            //
+            this.Log("Image desktop created.");
+            initializeButton.Enabled = true;
+            imageDesktopButton.Enabled = false;
+            dataDesktopButton.Enabled = false;
         }
 
-        private void macro2ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void dataDesktopButton_Click(object sender, EventArgs e)
         {
-            //Macro macro = new Macro(this);
-            //macro.MNistMacro();
+            DataEnvironment env = new DataEnvironment(this);
+            _agents.Add(env);
+/*            IAgent preprocessor = new DataPreprocessor(this);
+            _agents.Add(preprocessor);*/
+            HTMBuilder htmBuilder = new HTMBuilder(this);
+            _agents.Add(htmBuilder);
+            //preprocessor.InputAgent = env;   // link the preprocessor to the environment
+            htmBuilder.InputAgent = env;   // link the htm builder to the environment
+            htmBuilder.MinimumOverlap = 1;
+
+            // Set the layout
+            //preprocessor.MdiParent = this;
+            //preprocessor.Location = new Point(0, this.Top + this.Height);
+            //preprocessor.Show();
+            htmBuilder.MdiParent = this;
+            htmBuilder.Location = new Point(0, 0);
+            htmBuilder.Show();
+            env.MdiParent = this;
+            env.Location = new Point(htmBuilder.Width, 0);
+            env.Show();
+
+            //
+            this.Log("Data desktop created.");
+            initializeButton.Enabled = true;
+            imageDesktopButton.Enabled = false;
+            dataDesktopButton.Enabled = false;
         }
 
-        private void BaseScript()
+        private void stepButton_Click(object sender, EventArgs e)
         {
-            _env = new BasicEnvironment(this);
-            _agn = new HTMBuilder(this);
-            _agn.InputAgent = _env;   // link the agent to the environment
+            Step();
+            UpdateCycleTextBox();
+        }
 
-            // Set visual properties
-            Form _envForm = (Form)_env;
-            Form _agnForm = (Form)_agn;
-            _envForm.Location = new Point(510, 0);
-            _envForm.Show();
-            _env.Initialize(); // TO DO manage better the initialization process.
-            _agnForm.Location = new Point(0, 250);
-            _agnForm.Show();
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            _stopLoop = false;
+            _loopThread = new Thread(Loop);
+            _loopThread.Start();
+            startButton.Enabled = false;
+            stepButton.Enabled = false;
+            stopButton.Enabled = true;
+        }
 
-            this.Log("Main classes created.");
-            startNetButton.Enabled = true;
-            stepNetButton.Enabled = true;
-            stopNetButton.Enabled = false;
+        private void stopButton_Click(object sender, EventArgs e)
+        {
+            _stopLoop = true;
+        }
+
+        private void initializeButton_Click(object sender, EventArgs e)
+        {
+            foreach (IAgent agn in _agents)
+                agn.Initialize();
+            initializeButton.Enabled = false;
+            startButton.Enabled = true;
+            stepButton.Enabled = true;
+            stopButton.Enabled = false;
         }
     }
 }

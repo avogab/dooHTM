@@ -20,10 +20,11 @@ Prerequisites
 ===============
 Quick start
 ===============
+- click on 'Image desktop' button
 - set the parameters on Environment form
 - set the parameters on Agent Control form
-- click on create
-- push step button or loop button.
+- click on 'Initialize' button
+- push 'Step' button or 'Loop' button.
 
 
 ===============

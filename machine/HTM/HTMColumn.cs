@@ -45,7 +45,7 @@ namespace Doo.Machine.HTM
             
             _cells = new List<HTMCell>();
             for (int i = 0; i < region.CellsPerColumn; i++)
-                _cells.Add(new HTMCell(this));
+                _cells.Add(new HTMCell(this, i));
             _proximalSegment = new HTMSegment(null, _region.SegmentActivationThreshold);
             _isActive = false;
             _overlap = 0;

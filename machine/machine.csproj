@@ -62,10 +62,16 @@
       <DependentUpon>Cellls2dViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Cells2D.cs" />
-    <Compile Include="HTMBuilder.cs">
+    <Compile Include="DataPreprocessor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HTMBuilder.Designer.cs">
+    <Compile Include="DataPreprocessor.Designer.cs">
+      <DependentUpon>DataPreprocessor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HTM\HTMBuilder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HTM\HTMBuilder.Designer.cs">
       <DependentUpon>HTMBuilder.cs</DependentUpon>
     </Compile>
     <Compile Include="FilterVertex.cs" />
@@ -99,10 +105,18 @@
     <Compile Include="HTM\HTMSegment.cs" />
     <Compile Include="HTM\HTMSynapse.cs" />
     <Compile Include="HTM\HTMTypes.cs" />
-    <Compile Include="PreprocessAgent.cs" />
+    <Compile Include="ImagePreprocessor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImagePreprocessor.Designer.cs">
+      <DependentUpon>ImagePreprocessor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types.cs" />
-    <EmbeddedResource Include="HTMBuilder.resx">
+    <EmbeddedResource Include="DataPreprocessor.resx">
+      <DependentUpon>DataPreprocessor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HTM\HTMBuilder.resx">
       <DependentUpon>HTMBuilder.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Cellls2dViewer.resx">
@@ -119,6 +133,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HTM\HTMColumnsViewer.resx">
       <DependentUpon>HTMColumnsViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImagePreprocessor.resx">
+      <DependentUpon>ImagePreprocessor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

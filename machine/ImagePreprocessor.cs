@@ -1,44 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Text;
+using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using Doo.Machine.HTM;
 
 namespace Doo.Machine
 {
-    public class PreprocessAgent : IAgent
+    public partial class ImagePreprocessor : Form, IAgent
     {
+        IAgent _inputAgent;
         IDirector _director;
         int _outputWidth;
         int _outputHeight;
-        IAgent _inputAgent;
         Image<Gray, byte> _currentImage;
         Image<Gray, byte> _previousImage;
         Image<Gray, byte> _blankImage;
-        Cells2D<Doo.Machine.HTM.HTMCell> _outputCells;
+        Cells2D<HTMCell> _outputCells;
         bool _detectMotion;
-        Cellls2dViewer _viewer;
-        
+
         public IAgent InputAgent { get { return _inputAgent; } set { _inputAgent = value; } }
         public bool DetectMotion { get { return _detectMotion; } set { _detectMotion = value; } }
 
-        public PreprocessAgent(IDirector director, int outputWidth, int outputHeight, bool detectMotion)
+        public ImagePreprocessor(IDirector director)
         {
+            InitializeComponent();
+            outputSizeComboBox.Items.Add(" 40 x  25");
+            outputSizeComboBox.Items.Add(" 20 x  01");
+            outputSizeComboBox.SelectedIndex = 0;
             _director = director;
-            _outputWidth = outputWidth;
-            _outputHeight = outputHeight;
-            _detectMotion = detectMotion;
-            _outputCells = new Cells2D<HTM.HTMCell>(outputWidth, outputHeight);
-            //_viewer = new Cellls2dViewer(_outputCells);
-            //_viewer.Show();
-
         }
 
         public bool Initialize()
         {
             _currentImage = null;
             _previousImage = null;
+            _outputWidth = int.Parse(outputSizeComboBox.Text.Substring(0, 3));
+            _outputHeight = int.Parse(outputSizeComboBox.Text.Substring(6, 3));
             _blankImage = new Image<Gray, byte>(_outputWidth, _outputHeight);
+            _outputCells = new Cells2D<HTMCell>(_outputWidth, _outputHeight);
+
+            //
+            outputSizeComboBox.Enabled = false;
+            detectMotionCheckBox.Enabled = true;
             return true;
         }
 
@@ -65,7 +73,6 @@ namespace Doo.Machine
                 for (int y = 0; y < _outputHeight; y++)
                     _outputCells[x, y].SetActive((underneathArray[y, x, 0] == 255));
 
-            //_viewer.UpdateImage();
             return true;
         }
 
@@ -86,6 +93,11 @@ namespace Doo.Machine
             motionImage = image.AbsDiff(_previousImage);
             _previousImage = image.Clone();
             return motionImage.ThresholdBinary(new Gray(20), new Gray(255));
+        }
+
+        private void detectMotionCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            _detectMotion = detectMotionCheckBox.Checked;
         }
     }
 }

@@ -60,6 +60,20 @@ namespace Doo.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap deskImage {
+            get {
+                object obj = ResourceManager.GetObject("deskImage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap initializeImage {
+            get {
+                object obj = ResourceManager.GetObject("initializeImage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap startImage {
             get {
                 object obj = ResourceManager.GetObject("startImage", resourceCulture);

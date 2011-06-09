@@ -125,6 +125,7 @@ namespace Doo.Machine.HTM
             if (p.X == -1 || p.Y == -1)
                 return;
             HTMCellViewer cellViewer = new HTMCellViewer(_region.Columns[p.X, p.Y].Cells[_indexInColumn]);
+            cellViewer.MdiParent = ((Form)(this.Parent)).MdiParent;
             cellViewer.Show();
             _cellViewers.Add(cellViewer);
         }

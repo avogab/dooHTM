@@ -9,8 +9,6 @@ namespace Doo.Machine.HTM
     {
         IDirector _director;
         IAgent _inputAgent;
-        int _inputWidth;
-        int _inputHeight;
         int _width;
         int _height;
         int _cellsPerColumn;
@@ -27,20 +25,27 @@ namespace Doo.Machine.HTM
         Cells2D<HTMCell> _inputCells;
         Cells2D<HTMCell> _outputCells;
         double _proximalSegmentCoverage;
+        int _minSegmentActivityForLearning;
 
         public IDirector Director { get { return _director; } set { _director = value; } }
-        public IAgent InputAgent { get { return _inputAgent; } set { _inputAgent = value; } }
+        public IAgent InputAgent { get { return _inputAgent; } set {
+                _inputAgent = value;
+                Cells2D<HTMCell> inputCells = (Cells2D<HTMCell>)_inputAgent.GetOutput();
+                _inputCells = new Cells2D<HTMCell>(inputCells.Width, inputCells.Height);
+            }
+        }
         public int Width { get { return _width; } }
         public int Height { get { return _height; } }
         public int CellsPerColumn { get { return _cellsPerColumn; } }
         internal HTMColumn[,] Columns { get { return _columns; } }
-        public double MinOverlap { get { return _minOverlap; } }
-        public int DesiredLocalActivity { get { return _desiredLocalActivity; } }
-        public int SegmentActivationThreshold { get { return _segmentActivationThreshold; } }
+        public int MinOverlap { get { return _minOverlap; } set { _minOverlap = value; } }
+        public int DesiredLocalActivity { get { return _desiredLocalActivity; } set { _desiredLocalActivity = value; } }
+        public int SegmentActivationThreshold { get { return _segmentActivationThreshold; } set { _segmentActivationThreshold = value; } }
         public double InhibitionRadius { get { return _inhibitionRadius; } }
         public bool DoSpatialLearning { get { return _doSpatialLearning; } set { _doSpatialLearning = value; } }
         public bool DoTemporalLearning { get { return _doTemporalLearning; } set { _doTemporalLearning = value; } }
         public int CorrectPrediction { get { return _correctPrediction; } }
+        public int MinSegmentActivityForLearning { get { return _minSegmentActivityForLearning; } set { _minSegmentActivityForLearning = value; } }
 
         // param inputCells: input data matrix
         // param regionWidth: number of columns in the region
@@ -49,25 +54,24 @@ namespace Doo.Machine.HTM
         // param minOverlap: the minimum number of inputs that must be active for a column to be considered during the inhibition step.
         // param desiredLocalActivity number of columns that will be winners after the inhibition step.
         // param segmentActivationThreshold: the minimum number of synapse that must be active to activate a segment.
+        // param minSegmentActivityForLearning: minimum segment activity for learning.
         // param proximalSegmentCoverage: the percentage of input matrix that belongs to each column (of course each column overlap with the other).
-        public HTMRegionAgent(IDirector director, int inputWidth, int inputHeight, int regionWidth, int regionHeight, int cellsPerColumn,
-            int minOverlap, int desiredLocalActivity, int segmentActivationThreshold, double proximalSegmentCoverage)
+        public HTMRegionAgent(IDirector director, int regionWidth, int regionHeight, int cellsPerColumn,
+            int minOverlap, int desiredLocalActivity, int segmentActivationThreshold, int minSegmentActivityForLearning, double proximalSegmentCoverage)
         {
             _director = director;
-            _inputWidth = inputWidth;
-            _inputHeight = inputHeight;
             _width = regionWidth;
             _height = regionHeight;
             _cellsPerColumn = cellsPerColumn;
             _minOverlap = minOverlap;
             _desiredLocalActivity = desiredLocalActivity;
             _segmentActivationThreshold = segmentActivationThreshold;
+            _minSegmentActivityForLearning = minSegmentActivityForLearning;
             _proximalSegmentCoverage = proximalSegmentCoverage;
             _doSpatialLearning = true;
             _doTemporalLearning = true;
             
             _random = new RandomEx(0);
-            _inputCells = new Cells2D<HTMCell>(inputWidth, inputHeight);
             _activeColumns = new List<HTMColumn>(_width * _height);
 
             // Create the columns
@@ -128,8 +132,8 @@ namespace Doo.Machine.HTM
             Cells2D<HTMCell> inputCells = (Cells2D<HTMCell>)_inputAgent.GetOutput();
             
             // TO DO: avoid the copy
-            for (int x = 0; x < _inputWidth; x++)
-                for (int y = 0; y < _inputHeight; y++)
+            for (int x = 0; x < inputCells.Width; x++)
+                for (int y = 0; y < inputCells.Height; y++)
                     _inputCells[x, y].SetActive(inputCells[x, y].GetActive(0));
 
             StepSpatialPooling();
@@ -138,10 +142,13 @@ namespace Doo.Machine.HTM
         }
 
         // Return all the columns within inhibitionRadius of the input column.
+        // <avogab>
+        // Use a +50% incremented inhibitionRadius to give more chance to reconsider far cells.
+        // </avogab>
         internal List<HTMColumn> Neighbors(HTMColumn column)
         {
-            int iradX = (int)(_inhibitionRadius * _width * 2);
-            int iradY = (int)(_inhibitionRadius * _height * 2);
+            int iradX = (int)(_inhibitionRadius * _width * 1.5);
+            int iradY = (int)(_inhibitionRadius * _height * 1.5);
             int x0 = Math.Max(0, Math.Min(column.PosX - 1, column.PosX - iradX));
             int y0 = Math.Max(0, Math.Min(column.PosY - 1, column.PosY - iradY));
             int x1 = Math.Min(_width - 1, Math.Max(column.PosX + 1, column.PosX + iradX));
@@ -165,21 +172,33 @@ namespace Doo.Machine.HTM
             return overlaps[overlaps.Count - k];
         }
 
+
+        // <Numenta>
         // The radius of the average connected receptive field size of all the columns.
         // The connected receptive field size of a column includes only the connected synapses
         // (those with permanence values >= connectedPerm). This is used to determine the extent
         // of lateral inhibition between columns.
+        // </Numenta>
+        // <avogab>
+        // For each column the function get the farthest connected synapses.
+        // </avogab>
         public double AverageReceptiveFieldSize()
         {
             double average = 0;
             int count = 0;
+            double max;
+            double d;
             foreach (HTMColumn col in _columns)
             {
+                max = 0;
                 foreach (HTMSynapse syn in col.ProximalSegment.GetConnectedSynapses())
                 {
-                    average += Math.Sqrt(Math.Pow(col.X - syn.InputCell.X, 2) + Math.Pow(col.Y - syn.InputCell.Y, 2));
-                    count++;
+                    d = Math.Sqrt(Math.Pow(col.X - syn.InputCell.X, 2) + Math.Pow(col.Y - syn.InputCell.Y, 2));
+                    if (d > max)
+                        max = d;
                 }
+                average += max;
+                count++;
             }
             if (count > 0)
                 return average / count;
@@ -322,6 +341,7 @@ namespace Doo.Machine.HTM
                             continue;
 
                         cell.SetPredicting(true);
+
                         // TO DO : check. Active and predictive state are mutual exclusive?
                         // if so, the changing from active to predicting must be done
                         // through a temporary array to avoid cell asymmetrical behavior.
@@ -337,7 +357,6 @@ namespace Doo.Machine.HTM
                             HTMSegment predSegment = cell.GetBestMatchingSegment(-1, true);
                             if (predSegment == null)
                                 continue;
-                            _director.Log("New predSegment on col x:" + col.PosX.ToString() + " y:" + col.PosY.ToString());
                             SegmentUpdate predSegUpdate = cell.GetSegmentActiveSynapses(-1, predSegment, true);
                             cell.SegmentUpdateList.Add(predSegUpdate);
                         }
@@ -360,12 +379,12 @@ namespace Doo.Machine.HTM
                     {
                         if (cell.SegmentUpdateList.Count == 0) // if there isn't segment to adapt then continue.
                             continue;
-                        if (/*cell.GetActive(0) &*/ cell.GetLearning(0))
+                        if (cell.GetLearning(0))
                         {
                             // once we get feed-forward input and the cell is chosen as a learning cell
                             cell.AdaptSegments(true);
                         }
-                        else if (!cell.GetPredicting(0) && cell.GetPredicting(-1))
+                        else  // if (!cell.GetPredicting(0) && cell.GetPredicting(-1))
                         {
                             // if the cell ever stops predicting for any reason,
                             // we negatively reinforce the segments 

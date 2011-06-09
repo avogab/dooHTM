@@ -7,11 +7,11 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using Doo.Machine.HTM;
 
-namespace Doo.Machine
+namespace Doo.Machine.HTM
 {
     public partial class HTMBuilder : Form, IAgent
     {
-        IAgent _inputAgent;
+        IAgent _inputAgent;  // tipically an image preprocessor
         IDirector _director;
         bool _isInitialized;
         int _inputWidth;
@@ -19,17 +19,17 @@ namespace Doo.Machine
         int _regionWidth;
         int _regionHeight;
         HTMRegionAgent _regionAgent;
-        PreprocessAgent _preprocessAgent;
         HTMRegionViewer _regionViewer;
 
         public IAgent InputAgent { get { return _inputAgent; } set { _inputAgent = value; } }
+        public int MinimumOverlap { set {minimumOverlapTextBox.Text = value.ToString(); } }
+        public int DesiredLocalActivity { set { desiredLocalActivityTextBox.Text = value.ToString(); } }
+        public int SegmentActivationThreshold { set { segmentActivationThresholdTextBox.Text = value.ToString(); } }
+        public int MinSegmentActivityForLearning { set { minSegmentActivityForLearningTextBox.Text = value.ToString(); } }
 
         public HTMBuilder(IDirector director)
         {
             InitializeComponent();
-            inputSizeComboBox.Items.Add(" 40 x  25");
-            inputSizeComboBox.Items.Add(" 20 x  01");
-            inputSizeComboBox.SelectedIndex = 0;
             regionSizeComboBox.Items.Add(" 40 x  25");
             regionSizeComboBox.Items.Add(" 20 x  12");
             regionSizeComboBox.Items.Add(" 20 x  01");
@@ -59,17 +59,17 @@ namespace Doo.Machine
             int minimumOverlap;
             int desiredLocalActiviy;
             int segmentActivationThreshold;
+            int minSegmentActivityForLearning;
             double proximalSegmentCoverage;
             try
             {
-                _inputWidth = int.Parse(inputSizeComboBox.Text.Substring(0, 3));
-                _inputHeight = int.Parse(inputSizeComboBox.Text.Substring(6, 3));
                 _regionWidth = int.Parse(regionSizeComboBox.Text.Substring(0, 3));
                 _regionHeight = int.Parse(regionSizeComboBox.Text.Substring(6, 3));
                 cellsPerColumn = int.Parse(networkSizeComboBox.Text.Substring(networkSizeComboBox.Text.Length - 1, 1));
                 minimumOverlap = int.Parse(minimumOverlapTextBox.Text);
                 desiredLocalActiviy = int.Parse(desiredLocalActivityTextBox.Text);
                 segmentActivationThreshold = int.Parse(segmentActivationThresholdTextBox.Text);
+                minSegmentActivityForLearning = int.Parse(segmentActivationThresholdTextBox.Text);
                 proximalSegmentCoverage = double.Parse(proximalSegmentCoverageTextBox.Text) / 100;
             }
             catch (Exception exch)
@@ -84,19 +84,18 @@ namespace Doo.Machine
             }
 
             // Create the network.
-            _preprocessAgent = new PreprocessAgent(_director, _inputWidth, _inputHeight, true);
-            _preprocessAgent.InputAgent = this.InputAgent; // Redirect the input to the first node of the network.
-            _regionAgent = new HTMRegionAgent(_director, _inputWidth, _inputHeight, _regionWidth, _regionHeight, cellsPerColumn, minimumOverlap, desiredLocalActiviy, segmentActivationThreshold, proximalSegmentCoverage);
-            _regionAgent.InputAgent = _preprocessAgent;
-            _preprocessAgent.Initialize();
+            _regionAgent = new HTMRegionAgent(_director, _regionWidth, _regionHeight, cellsPerColumn, minimumOverlap, desiredLocalActiviy, segmentActivationThreshold, minSegmentActivityForLearning, proximalSegmentCoverage);
+            _regionAgent.InputAgent = _inputAgent;
             _regionAgent.Initialize();
 
             // Create the viewer
             _regionViewer = new HTMRegionViewer(_regionAgent);
-            _regionViewer.Location = new Point(this.Left + this.Width, this.Top);
+            _regionViewer.MdiParent = this.MdiParent;
+            _regionViewer.Location = new Point(this.Left + this.Width, 20);
             _regionViewer.Show();
 
             _isInitialized = true;
+            structureGroupBox.Enabled = false;  // disable the structural parameters
             return true;
         }
 
@@ -117,28 +116,37 @@ namespace Doo.Machine
                 _director.Log("Called Step() before network creation.");
                 return false;
             }
-            _preprocessAgent.Step();
             _regionAgent.Step();
             _regionViewer.UpdateView();
             return true;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void minimumOverlapTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (!Initialize())
+            if (_regionAgent == null)
                 return;
-            structureGroupBox.Enabled = false;
-            detectMotionCheckBox.Enabled = true;
+            _regionAgent.MinOverlap = int.Parse(minimumOverlapTextBox.Text);
         }
 
-        private void detectMotionCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void desiredLocalActivityTextBox_TextChanged(object sender, EventArgs e)
         {
-            _preprocessAgent.DetectMotion = detectMotionCheckBox.Checked;
+            if (_regionAgent == null)
+                return;
+            _regionAgent.DesiredLocalActivity = int.Parse(desiredLocalActivityTextBox.Text);
         }
 
-        private void regionSizeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void segmentActivationThresholdTextBox_TextChanged(object sender, EventArgs e)
         {
+            if (_regionAgent == null)
+                return;
+            _regionAgent.SegmentActivationThreshold = int.Parse(segmentActivationThresholdTextBox.Text);
+        }
 
+        private void minSegmentActivityForLearningTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (_regionAgent == null)
+                return;
+            _regionAgent.MinSegmentActivityForLearning = int.Parse(minSegmentActivityForLearningTextBox.Text);
         }
     }
 }
