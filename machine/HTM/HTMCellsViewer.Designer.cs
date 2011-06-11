@@ -35,7 +35,7 @@
             // layerLabel
             // 
             this.layerLabel.AutoSize = true;
-            this.layerLabel.BackColor = System.Drawing.Color.White;
+            this.layerLabel.BackColor = System.Drawing.SystemColors.Control;
             this.layerLabel.Location = new System.Drawing.Point(3, 0);
             this.layerLabel.Name = "layerLabel";
             this.layerLabel.Size = new System.Drawing.Size(29, 13);
@@ -45,7 +45,7 @@
             // cellPointedLabel
             // 
             this.cellPointedLabel.AutoSize = true;
-            this.cellPointedLabel.BackColor = System.Drawing.Color.White;
+            this.cellPointedLabel.BackColor = System.Drawing.SystemColors.Control;
             this.cellPointedLabel.Location = new System.Drawing.Point(149, 0);
             this.cellPointedLabel.Name = "cellPointedLabel";
             this.cellPointedLabel.Size = new System.Drawing.Size(59, 13);

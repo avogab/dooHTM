@@ -32,7 +32,7 @@ namespace Doo.Machine.HTM
             _inactiveColumnBrush = new SolidBrush(Color.White);
             _backgroundColor = Color.White;
             this.Width = width;
-            this.Height = height + 10;
+            this.Height = height + statLabel.Height + statLabel.Top;
             _bitmap = new Bitmap(width, height);
             _g = Graphics.FromImage(_bitmap);
             _g1 = this.CreateGraphics();
@@ -49,20 +49,20 @@ namespace Doo.Machine.HTM
                 return;
 
             int x1, y1, x2, y2;
-            double halfColSize = 3;  // TO DO: compute the value
             Brush brush = null;
             int count;
             int width = _bitmap.Width;
             int height = _bitmap.Height;
+            int colSize =  Math.Max(Math.Min(width / _region.Width , height / _region.Height) - 1, 2);
 
             StatInfo stat = _region.GetStatInfo(_propertyShowed);
             double val;
             foreach (HTMColumn col in _region.Columns)
             {
-                x1 = (int)(col.X * (width - 2 * halfColSize));
-                x2 = (int)(col.X * (width - 2 * halfColSize) + 2 * halfColSize);
-                y1 = (int)(col.Y * (height - 2 * halfColSize));
-                y2 = (int)(col.Y * (height - 2 * halfColSize) + 2 * halfColSize);
+                x1 = (int)(col.X * (width - colSize - 1));
+                x2 = (int)(col.X * (width - colSize - 1) + colSize);
+                y1 = (int)(col.Y * (height - colSize - 1));
+                y2 = (int)(col.Y * (height - colSize - 1) + colSize);
 
                 switch (_propertyShowed)
                 {
@@ -112,7 +112,7 @@ namespace Doo.Machine.HTM
                 _g.FillRectangle(brush, x1, y1, x2 - x1, y2 - y1);
                 _g.DrawRectangle(new Pen(Color.Black), x1, y1, x2 - x1, y2 - y1);
             }
-            _g1.DrawImageUnscaled(_bitmap, 0, 10);
+            _g1.DrawImageUnscaled(_bitmap, 0, statLabel.Height + statLabel.Top);
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)

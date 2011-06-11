@@ -24,6 +24,7 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.imageDesktopButton = new System.Windows.Forms.ToolStripButton();
+            this.mnistDesktopButton = new System.Windows.Forms.ToolStripButton();
             this.dataDesktopButton = new System.Windows.Forms.ToolStripButton();
             this.separator1 = new System.Windows.Forms.ToolStripSeparator();
             this.initializeButton = new System.Windows.Forms.ToolStripButton();
@@ -51,6 +52,7 @@
             this.logListView.TabIndex = 13;
             this.logListView.UseCompatibleStateImageBehavior = false;
             this.logListView.View = System.Windows.Forms.View.Details;
+            this.logListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.logListView_MouseDoubleClick);
             // 
             // id
             // 
@@ -65,7 +67,7 @@
             // description
             // 
             this.description.Text = "Description";
-            this.description.Width = 280;
+            this.description.Width = 543;
             // 
             // label1
             // 
@@ -127,6 +129,7 @@
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.imageDesktopButton,
+            this.mnistDesktopButton,
             this.dataDesktopButton,
             this.separator1,
             this.initializeButton,
@@ -148,6 +151,16 @@
             this.imageDesktopButton.Size = new System.Drawing.Size(114, 49);
             this.imageDesktopButton.Text = "Image desktop";
             this.imageDesktopButton.Click += new System.EventHandler(this.imageDesktopButton_Click);
+            // 
+            // mnistDesktopButton
+            // 
+            this.mnistDesktopButton.Image = global::Doo.Properties.Resources.deskImage;
+            this.mnistDesktopButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mnistDesktopButton.Name = "mnistDesktopButton";
+            this.mnistDesktopButton.Size = new System.Drawing.Size(115, 49);
+            this.mnistDesktopButton.Text = "MNIST desktop";
+            this.mnistDesktopButton.Visible = false;
+            this.mnistDesktopButton.Click += new System.EventHandler(this.mnistDesktopButton_Click);
             // 
             // dataDesktopButton
             // 
@@ -267,6 +280,7 @@
         private System.Windows.Forms.ToolStripSeparator separator1;
         private System.Windows.Forms.ToolStripButton initializeButton;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ToolStripButton mnistDesktopButton;
     }
 }
 

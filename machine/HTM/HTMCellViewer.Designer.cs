@@ -41,6 +41,7 @@
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(250, 222);
             this.textBox1.TabIndex = 0;
+            this.textBox1.TabStop = false;
             // 
             // HTMCellViewer
             // 

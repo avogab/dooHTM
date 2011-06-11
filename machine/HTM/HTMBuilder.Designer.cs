@@ -11,7 +11,6 @@
         private void InitializeComponent()
         {
             this.regionSize = new System.Windows.Forms.Label();
-            this.regionSizeComboBox = new System.Windows.Forms.ComboBox();
             this.preprocessGroupBox = new System.Windows.Forms.GroupBox();
             this.minSegmentActivityForLearningTextBox = new System.Windows.Forms.TextBox();
             this.minSegmentActivityForLearningLabel = new System.Windows.Forms.Label();
@@ -26,6 +25,8 @@
             this.proximalSegmentCoverageLabel = new System.Windows.Forms.Label();
             this.networkSizeComboBox = new System.Windows.Forms.ComboBox();
             this.networkSizeLabel = new System.Windows.Forms.Label();
+            this.regionWidthTextBox = new System.Windows.Forms.TextBox();
+            this.regionHeightTextBox = new System.Windows.Forms.TextBox();
             this.preprocessGroupBox.SuspendLayout();
             this.structureGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -35,18 +36,9 @@
             this.regionSize.AutoSize = true;
             this.regionSize.Location = new System.Drawing.Point(10, 59);
             this.regionSize.Name = "regionSize";
-            this.regionSize.Size = new System.Drawing.Size(62, 13);
+            this.regionSize.Size = new System.Drawing.Size(136, 13);
             this.regionSize.TabIndex = 5;
-            this.regionSize.Text = "Region size";
-            // 
-            // regionSizeComboBox
-            // 
-            this.regionSizeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.regionSizeComboBox.FormattingEnabled = true;
-            this.regionSizeComboBox.Location = new System.Drawing.Point(204, 56);
-            this.regionSizeComboBox.Name = "regionSizeComboBox";
-            this.regionSizeComboBox.Size = new System.Drawing.Size(92, 21);
-            this.regionSizeComboBox.TabIndex = 6;
+            this.regionSize.Text = "Region size (width x height)";
             // 
             // preprocessGroupBox
             // 
@@ -70,7 +62,7 @@
             this.minSegmentActivityForLearningTextBox.Location = new System.Drawing.Point(203, 97);
             this.minSegmentActivityForLearningTextBox.Name = "minSegmentActivityForLearningTextBox";
             this.minSegmentActivityForLearningTextBox.Size = new System.Drawing.Size(33, 20);
-            this.minSegmentActivityForLearningTextBox.TabIndex = 20;
+            this.minSegmentActivityForLearningTextBox.TabIndex = 7;
             this.minSegmentActivityForLearningTextBox.Text = "3";
             this.minSegmentActivityForLearningTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.minSegmentActivityForLearningTextBox.TextChanged += new System.EventHandler(this.minSegmentActivityForLearningTextBox_TextChanged);
@@ -98,7 +90,7 @@
             this.desiredLocalActivityTextBox.Location = new System.Drawing.Point(203, 49);
             this.desiredLocalActivityTextBox.Name = "desiredLocalActivityTextBox";
             this.desiredLocalActivityTextBox.Size = new System.Drawing.Size(32, 20);
-            this.desiredLocalActivityTextBox.TabIndex = 14;
+            this.desiredLocalActivityTextBox.TabIndex = 5;
             this.desiredLocalActivityTextBox.Text = "5";
             this.desiredLocalActivityTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.desiredLocalActivityTextBox.TextChanged += new System.EventHandler(this.desiredLocalActivityTextBox_TextChanged);
@@ -108,7 +100,7 @@
             this.minimumOverlapTextBox.Location = new System.Drawing.Point(203, 24);
             this.minimumOverlapTextBox.Name = "minimumOverlapTextBox";
             this.minimumOverlapTextBox.Size = new System.Drawing.Size(32, 20);
-            this.minimumOverlapTextBox.TabIndex = 13;
+            this.minimumOverlapTextBox.TabIndex = 4;
             this.minimumOverlapTextBox.Text = "3";
             this.minimumOverlapTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.minimumOverlapTextBox.TextChanged += new System.EventHandler(this.minimumOverlapTextBox_TextChanged);
@@ -118,7 +110,7 @@
             this.segmentActivationThresholdTextBox.Location = new System.Drawing.Point(203, 73);
             this.segmentActivationThresholdTextBox.Name = "segmentActivationThresholdTextBox";
             this.segmentActivationThresholdTextBox.Size = new System.Drawing.Size(33, 20);
-            this.segmentActivationThresholdTextBox.TabIndex = 16;
+            this.segmentActivationThresholdTextBox.TabIndex = 6;
             this.segmentActivationThresholdTextBox.Text = "2";
             this.segmentActivationThresholdTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.segmentActivationThresholdTextBox.TextChanged += new System.EventHandler(this.segmentActivationThresholdTextBox_TextChanged);
@@ -143,11 +135,12 @@
             // 
             // structureGroupBox
             // 
+            this.structureGroupBox.Controls.Add(this.regionHeightTextBox);
+            this.structureGroupBox.Controls.Add(this.regionWidthTextBox);
             this.structureGroupBox.Controls.Add(this.proximalSegmentCoverageTextBox);
             this.structureGroupBox.Controls.Add(this.proximalSegmentCoverageLabel);
             this.structureGroupBox.Controls.Add(this.networkSizeComboBox);
             this.structureGroupBox.Controls.Add(this.networkSizeLabel);
-            this.structureGroupBox.Controls.Add(this.regionSizeComboBox);
             this.structureGroupBox.Controls.Add(this.regionSize);
             this.structureGroupBox.Location = new System.Drawing.Point(3, 3);
             this.structureGroupBox.Name = "structureGroupBox";
@@ -161,7 +154,7 @@
             this.proximalSegmentCoverageTextBox.Location = new System.Drawing.Point(204, 83);
             this.proximalSegmentCoverageTextBox.Name = "proximalSegmentCoverageTextBox";
             this.proximalSegmentCoverageTextBox.Size = new System.Drawing.Size(32, 20);
-            this.proximalSegmentCoverageTextBox.TabIndex = 18;
+            this.proximalSegmentCoverageTextBox.TabIndex = 3;
             this.proximalSegmentCoverageTextBox.Text = "10";
             this.proximalSegmentCoverageTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -181,7 +174,7 @@
             this.networkSizeComboBox.Location = new System.Drawing.Point(204, 29);
             this.networkSizeComboBox.Name = "networkSizeComboBox";
             this.networkSizeComboBox.Size = new System.Drawing.Size(92, 21);
-            this.networkSizeComboBox.TabIndex = 8;
+            this.networkSizeComboBox.TabIndex = 0;
             // 
             // networkSizeLabel
             // 
@@ -191,6 +184,23 @@
             this.networkSizeLabel.Size = new System.Drawing.Size(175, 13);
             this.networkSizeLabel.TabIndex = 7;
             this.networkSizeLabel.Text = "HTM size (regions x cells in column)";
+            // 
+            // regionWidthTextBox
+            // 
+            this.regionWidthTextBox.Location = new System.Drawing.Point(203, 57);
+            this.regionWidthTextBox.Name = "regionWidthTextBox";
+            this.regionWidthTextBox.Size = new System.Drawing.Size(33, 20);
+            this.regionWidthTextBox.TabIndex = 1;
+            this.regionWidthTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.regionWidthTextBox.TextChanged += new System.EventHandler(this.regionWidthTextBox_TextChanged);
+            // 
+            // regionHeightTextBox
+            // 
+            this.regionHeightTextBox.Location = new System.Drawing.Point(251, 56);
+            this.regionHeightTextBox.Name = "regionHeightTextBox";
+            this.regionHeightTextBox.Size = new System.Drawing.Size(33, 20);
+            this.regionHeightTextBox.TabIndex = 2;
+            this.regionHeightTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // HTMBuilder
             // 
@@ -212,7 +222,6 @@
 
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.Label regionSize;
-        private System.Windows.Forms.ComboBox regionSizeComboBox;
 
 
         #endregion
@@ -231,6 +240,8 @@
         private System.Windows.Forms.TextBox proximalSegmentCoverageTextBox;
         private System.Windows.Forms.TextBox minSegmentActivityForLearningTextBox;
         private System.Windows.Forms.Label minSegmentActivityForLearningLabel;
+        private System.Windows.Forms.TextBox regionHeightTextBox;
+        private System.Windows.Forms.TextBox regionWidthTextBox;
 
     }
 }

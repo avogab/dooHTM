@@ -142,12 +142,45 @@ namespace Doo
             env.MdiParent = this;
             env.Location = new Point(preprocessor.Width, 0);
             env.Show();
-            env.Initialize(); // TO DO manage better the initialization process.
 
             //
             this.Log("Image desktop created.");
             initializeButton.Enabled = true;
             imageDesktopButton.Enabled = false;
+            mnistDesktopButton.Enabled = false;
+            dataDesktopButton.Enabled = false;
+        }
+
+
+        private void mnistDesktopButton_Click(object sender, EventArgs e)
+        {
+            MNistEnvironment env = new MNistEnvironment(this);
+            env.Path = Application.StartupPath + "\\..\\..\\..\\..\\..\\Mnist\\";
+            env.ItemsToLoad = 5;
+            _agents.Add(env);
+            ImagePreprocessor preprocessor = new ImagePreprocessor(this);
+            _agents.Add(preprocessor);
+            HTMBuilder htmBuilder = new HTMBuilder(this);
+            _agents.Add(htmBuilder);
+            preprocessor.InputAgent = env;   // link the preprocessor to the environment
+            htmBuilder.InputAgent = preprocessor;   // link the htm builder to the preprocessor
+
+            // Set the layout
+            preprocessor.MdiParent = this;
+            preprocessor.Location = new Point(0, 0);
+            preprocessor.Show();
+            htmBuilder.MdiParent = this;
+            htmBuilder.Location = new Point(0, preprocessor.Height);
+            htmBuilder.Show();
+            env.MdiParent = this;
+            env.Location = new Point(preprocessor.Width, 0);
+            env.Show();
+
+            //
+            this.Log("Image desktop created.");
+            initializeButton.Enabled = true;
+            imageDesktopButton.Enabled = false;
+            mnistDesktopButton.Enabled = false;
             dataDesktopButton.Enabled = false;
         }
 
@@ -161,7 +194,12 @@ namespace Doo
             _agents.Add(htmBuilder);
             //preprocessor.InputAgent = env;   // link the preprocessor to the environment
             htmBuilder.InputAgent = env;   // link the htm builder to the environment
+            htmBuilder.RegionWidth = 10;
+            htmBuilder.RegionHeight = 1;
             htmBuilder.MinimumOverlap = 1;
+            htmBuilder.DesiredLocalActivity = 2;
+            htmBuilder.SegmentActivationThreshold = 1;
+            htmBuilder.MinSegmentActivityForLearning = 2;
 
             // Set the layout
             //preprocessor.MdiParent = this;
@@ -178,6 +216,7 @@ namespace Doo
             this.Log("Data desktop created.");
             initializeButton.Enabled = true;
             imageDesktopButton.Enabled = false;
+            mnistDesktopButton.Enabled = false;
             dataDesktopButton.Enabled = false;
         }
 
@@ -205,7 +244,8 @@ namespace Doo
         private void initializeButton_Click(object sender, EventArgs e)
         {
             foreach (IAgent agn in _agents)
-                agn.Initialize();
+                if (!agn.Initialize())
+                    return;
             initializeButton.Enabled = false;
             startButton.Enabled = true;
             stepButton.Enabled = true;

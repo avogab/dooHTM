@@ -64,7 +64,6 @@ namespace Doo.Machine.HTM
             str += Environment.NewLine;
 
             textBox1.Text = str;
-            textBox1.SelectionStart = 0;
         }
     }
 }

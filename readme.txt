@@ -22,7 +22,15 @@ Quick start
 ===============
 - click on 'Image desktop' button
 - set the parameters on Environment form
-- set the parameters on Agent Control form
+- set the parameters on HTMBuilder form
+- click on 'Initialize' button
+- push 'Step' button or 'Loop' button.
+
+or
+
+- click on 'Data desktop' button
+- Load a binary text file
+- set the parameters on HTMBuilder form
 - click on 'Initialize' button
 - push 'Step' button or 'Loop' button.
 

@@ -71,6 +71,12 @@
     <Compile Include="Environments\ImageEnvironment.Designer.cs">
       <DependentUpon>ImageEnvironment.cs</DependentUpon>
     </Compile>
+    <Compile Include="Environments\MNistEnvironment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Environments\MNistEnvironment.Designer.cs">
+      <DependentUpon>MNistEnvironment.cs</DependentUpon>
+    </Compile>
     <Compile Include="Environments\Types.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -87,6 +93,9 @@
     <EmbeddedResource Include="Environments\ImageEnvironment.resx">
       <DependentUpon>ImageEnvironment.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Environments\MNistEnvironment.resx">
+      <DependentUpon>MNistEnvironment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

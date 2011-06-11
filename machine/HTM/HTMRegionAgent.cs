@@ -31,6 +31,8 @@ namespace Doo.Machine.HTM
         public IAgent InputAgent { get { return _inputAgent; } set {
                 _inputAgent = value;
                 Cells2D<HTMCell> inputCells = (Cells2D<HTMCell>)_inputAgent.GetOutput();
+                if (inputCells == null)
+                    return;
                 _inputCells = new Cells2D<HTMCell>(inputCells.Width, inputCells.Height);
             }
         }
@@ -83,11 +85,11 @@ namespace Doo.Machine.HTM
                 for (int cy = 0; cy < _height; cy++)
                 {
                     if (_width > 1)
-                        x = (cx + 0.5) / _width;
+                        x = (double)cx / (_width - 1);
                     else
                         x = 0.5;
                     if (_height > 1)
-                        y = (cy + 0.5) / _height;
+                        y = (double)cy / (_height - 1);
                     else
                         y = 0.5;
                     _columns[cx, cy] = new HTMColumn(this, cx, cy, x, y);

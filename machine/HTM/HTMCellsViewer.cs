@@ -19,7 +19,7 @@ namespace Doo.Machine.HTM
         Bitmap _bitmap;
         Graphics _g;
         Graphics _g1;
-        int halfColSize = 4;
+        int _colSize;
         List<HTMCellViewer> _cellViewers;
 
         //public HTMRegionViewerPropertyShowed PropertyShowed { get { return _propertyShowed; } set { _propertyShowed = value; } }
@@ -35,7 +35,7 @@ namespace Doo.Machine.HTM
             _learningCellBrush = new SolidBrush(Color.Green);
             _backgroundColor = Color.White;
             this.Width = width;
-            this.Height = height + layerLabel.Height;
+            this.Height = height + layerLabel.Height + layerLabel.Top;
             _bitmap = new Bitmap(width, height);
             _g = Graphics.FromImage(_bitmap);
             _g1 = this.CreateGraphics();
@@ -52,12 +52,14 @@ namespace Doo.Machine.HTM
             int x1, y1, x2, y2;
             int width = _bitmap.Width;
             int height = _bitmap.Height;
+            _colSize = Math.Max(Math.Min(width / _region.Width, height / _region.Height) - 2, 2);
+
             foreach (HTMColumn col in _region.Columns)
             {
-                x1 = (int)(col.X * (width - 2 * halfColSize));
-                x2 = (int)(col.X * (width - 2 * halfColSize)) + 2 * halfColSize;
-                y1 = (int)(col.Y * (height - 2 * halfColSize));
-                y2 = (int)(col.Y * (height - 2 * halfColSize)) + 2 * halfColSize;
+                x1 = (int)(col.X * (width - _colSize - 1));
+                x2 = (int)(col.X * (width - _colSize - 1)) + _colSize;
+                y1 = (int)(col.Y * (height - _colSize - 1));
+                y2 = (int)(col.Y * (height - _colSize - 1)) + _colSize;
                 
                 HTMCell cell = col.Cells[_indexInColumn];
                 if (cell.GetPredicting(0))
@@ -89,9 +91,7 @@ namespace Doo.Machine.HTM
                     _g.DrawRectangle(new Pen(new SolidBrush(Color.Black)), x1, y1, x2 - x1, y2 - y1);
                 }
             }
-            //_g1.DrawRectangle(new Pen(new SolidBrush(Color.White)), 0, 0, width, 10);
-            _g1.DrawImageUnscaled(_bitmap, 0, layerLabel.Height);
-
+            _g1.DrawImageUnscaled(_bitmap, 0, layerLabel.Height + layerLabel.Top);
 
             // TO DO : move in other method!
             foreach (HTMCellViewer cellViewer in _cellViewers)
@@ -106,8 +106,9 @@ namespace Doo.Machine.HTM
         private Point MouseToCell(int x, int y)
         {
             Point p = new Point();
-            int cx = (int)(_region.Width * (x) / (this.Width - halfColSize));
-            int cy = (int)(_region.Height * (y - layerLabel.Height) / (this.Height - layerLabel.Height - halfColSize));
+            int cx = (int)((double)x / _bitmap.Width * _region.Width);
+            int cy = (int)((double)(y - layerLabel.Height - layerLabel.Top) / _bitmap.Height * _region.Height);
+
             if (cx < 0 || cx >= _region.Width)
                 p.X = -1;
             else

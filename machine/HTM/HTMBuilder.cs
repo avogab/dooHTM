@@ -22,18 +22,18 @@ namespace Doo.Machine.HTM
         HTMRegionViewer _regionViewer;
 
         public IAgent InputAgent { get { return _inputAgent; } set { _inputAgent = value; } }
-        public int MinimumOverlap { set {minimumOverlapTextBox.Text = value.ToString(); } }
+        public int MinimumOverlap { set { minimumOverlapTextBox.Text = value.ToString(); } }
         public int DesiredLocalActivity { set { desiredLocalActivityTextBox.Text = value.ToString(); } }
         public int SegmentActivationThreshold { set { segmentActivationThresholdTextBox.Text = value.ToString(); } }
         public int MinSegmentActivityForLearning { set { minSegmentActivityForLearningTextBox.Text = value.ToString(); } }
+        public int RegionWidth { set { regionWidthTextBox.Text = value.ToString(); } }
+        public int RegionHeight { set { regionHeightTextBox.Text = value.ToString(); } }
 
         public HTMBuilder(IDirector director)
         {
             InitializeComponent();
-            regionSizeComboBox.Items.Add(" 40 x  25");
-            regionSizeComboBox.Items.Add(" 20 x  12");
-            regionSizeComboBox.Items.Add(" 20 x  01");
-            regionSizeComboBox.SelectedIndex = 1;
+            regionWidthTextBox.Text = "20";
+            regionHeightTextBox.Text = "12";
             networkSizeComboBox.Items.Add("1 x 1");
             networkSizeComboBox.Items.Add("1 x 2");
             networkSizeComboBox.Items.Add("1 x 3");
@@ -63,8 +63,8 @@ namespace Doo.Machine.HTM
             double proximalSegmentCoverage;
             try
             {
-                _regionWidth = int.Parse(regionSizeComboBox.Text.Substring(0, 3));
-                _regionHeight = int.Parse(regionSizeComboBox.Text.Substring(6, 3));
+                _regionWidth = int.Parse(regionWidthTextBox.Text);
+                _regionHeight = int.Parse(regionHeightTextBox.Text);
                 cellsPerColumn = int.Parse(networkSizeComboBox.Text.Substring(networkSizeComboBox.Text.Length - 1, 1));
                 minimumOverlap = int.Parse(minimumOverlapTextBox.Text);
                 desiredLocalActiviy = int.Parse(desiredLocalActivityTextBox.Text);
@@ -125,6 +125,7 @@ namespace Doo.Machine.HTM
         {
             if (_regionAgent == null)
                 return;
+
             _regionAgent.MinOverlap = int.Parse(minimumOverlapTextBox.Text);
         }
 
@@ -147,6 +148,11 @@ namespace Doo.Machine.HTM
             if (_regionAgent == null)
                 return;
             _regionAgent.MinSegmentActivityForLearning = int.Parse(minSegmentActivityForLearningTextBox.Text);
+        }
+
+        private void regionWidthTextBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

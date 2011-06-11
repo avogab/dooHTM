@@ -8,7 +8,7 @@ namespace Doo.Machine.HTM
         HTMCell _cell;  // the cell that own the segment.
         bool _isSequence; // flag indicating whether the segment predicts feed-forward input the next time step.
         List<HTMSynapse> _synapses;
-        int _activationThreshold = 2;
+        int _activationThreshold;
 
         public HTMCell Cell { get { return _cell; } }
         public bool IsSequence { get { return _isSequence; } set { _isSequence = value; } }
